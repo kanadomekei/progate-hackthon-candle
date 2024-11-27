@@ -1,0 +1,11 @@
+name: Lint
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run linter
+        run: echo "Running linter (dummy)"
