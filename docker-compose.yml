@@ -1,15 +1,15 @@
 version: "3.8"
 services:
-  # backend-manim:
-  #   build:
-  #     context: ./backend-manim
-  #     dockerfile: Dockerfile  
-  #   ports:
-  #     - "10000:10000"
-  #   volumes:
-  #     - ./backend-manim:/app
-  #   env_file:
-  #     - .env  
+  backend:
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile  
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - GIN_MODE=release
+    command: ["/app/bootstrap"]
 
   frontend:
     build:
