@@ -4,7 +4,7 @@ tasks:
   docker:up:
     desc: "Starts all Docker services in detached mode"
     cmds:
-      - docker-compose up -d
+      - cd frontend && npm install && cd .. && docker-compose up -d
 
   docker:down:
     desc: "Stops all Docker services"
@@ -14,7 +14,7 @@ tasks:
   docker:up-frontend:
     desc: "Starts only the frontend Docker service in detached mode"
     cmds:
-      - docker-compose up frontend -d
+      - d frontend && npm install && cd .. && docker-compose up frontend -d
 
   docker:up-backend:
     desc: "Starts only the backend Docker service in detached mode"
@@ -24,7 +24,7 @@ tasks:
   docker:up--no-cache:
     desc: "Builds and starts all Docker services without using the cache"
     cmds:
-      - docker-compose up -d --build
+      - cd frontend && npm install && cd .. && docker-compose up -d --build
 
   lint:
     desc: "Run linter in frontend"
