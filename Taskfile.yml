@@ -5,7 +5,12 @@ tasks:
     desc: "Starts all Docker services in detached mode"
     cmds:
       - docker-compose up -d
-  
+
+  docker:down:
+    desc: "Stops all Docker services"
+    cmds:
+      - docker-compose down
+      
   docker:up-frontend:
     desc: "Starts only the frontend Docker service in detached mode"
     cmds:
@@ -21,7 +26,27 @@ tasks:
     cmds:
       - docker-compose up -d --build
 
-  docker:down:
-    desc: "Stops all Docker services"
+  lint:
+    desc: "Run linter in frontend"
     cmds:
-      - docker-compose down
+      - cd frontend && npm run lint
+
+  format:
+    desc: "Run format in frontend"
+    cmds:
+      - cd frontend && npm run format
+  
+  frontend:run:
+    desc: "Run frontend"
+    cmds:
+      - cd frontend && npm run dev
+
+  backend:run:
+    desc: "Run backend"
+    cmds:
+      - cd backend/app && go run main.go
+
+  devbox:up:
+    desc: "Starts the devbox shell"
+    cmds:
+      - devbox shell
