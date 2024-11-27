@@ -19,14 +19,9 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Change directory to frontend
-        run: cd frontend
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Run linter
-        run: npm run lint
-
-      - name: Run build
-        run: npm run build
+        run: |
+          cd frontend
+          npm install
+          npm run lint
+          npm run build
