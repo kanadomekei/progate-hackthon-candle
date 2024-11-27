@@ -20,6 +20,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
             
-      - run: cd backend && sam validate
-      - run: cd backend && sam build --use-container
-      - run: cd backend && sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+      - run: |
+            cd backend 
+            sam validate
+            
+      - run: |
+            cd backend 
+            sam build --use-container
+
+      - run: |
+            cd backend
+            sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
