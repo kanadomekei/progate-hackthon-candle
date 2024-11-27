@@ -1,8 +1,27 @@
 version: '3'
 
 tasks:
-  hello:
+  docker:up:
+    desc: "Starts all Docker services in detached mode"
     cmds:
-      - echo 'Hello World from Task!'
-    silent: true
+      - docker-compose up -d
+  
+  docker:up-frontend:
+    desc: "Starts only the frontend Docker service in detached mode"
+    cmds:
+      - docker-compose up frontend -d
 
+  docker:up-backend:
+    desc: "Starts only the backend Docker service in detached mode"
+    cmds:
+      - docker-compose up backend -d
+      
+  docker:up--no-cache:
+    desc: "Builds and starts all Docker services without using the cache"
+    cmds:
+      - docker-compose up -d --build
+
+  docker:down:
+    desc: "Stops all Docker services"
+    cmds:
+      - docker-compose down
