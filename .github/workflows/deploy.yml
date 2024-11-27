@@ -1,0 +1,11 @@
+name: Deploy
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Deploy
+        run: echo "Running Deploy (dummy)"

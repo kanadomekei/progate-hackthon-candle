@@ -1,0 +1,11 @@
+name: Build
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Build
+        run: echo "Running Build (dummy)"
