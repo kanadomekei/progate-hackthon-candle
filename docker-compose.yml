@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  # backend-manim:
+  #   build:
+  #     context: ./backend-manim
+  #     dockerfile: Dockerfile  
+  #   ports:
+  #     - "10000:10000"
+  #   volumes:
+  #     - ./backend-manim:/app
+  #   env_file:
+  #     - .env  
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev"
