@@ -23,8 +23,39 @@ Resources:
       DockerContext: ./app
       Dockerfile: Dockerfile
 
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties: 
+      DistributionConfig: 
+        Origins: 
+          - Id: ApiGatewayOrigin
+            DomainName: !Sub "${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}"
+            CustomOriginConfig: 
+              OriginProtocolPolicy: https-only
+        Enabled: true
+        DefaultCacheBehavior: 
+          TargetOriginId: ApiGatewayOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: 
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods: 
+            - GET
+            - HEAD
+          ForwardedValues: 
+            QueryString: true
+            Headers: 
+              - Authorization
+        ViewerCertificate: 
+          CloudFrontDefaultCertificate: true
+
 Outputs:
   GinApi:
     Description: "API Gateway endpoint URL for Prod stage for Gin function"
     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
+
+  CloudFrontUrl:
+    Description: "CloudFront URL"
+    Value: !GetAtt CloudFrontDistribution.DomainName
 
