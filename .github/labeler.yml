@@ -1,0 +1,12 @@
+Backend:
+  - changed-files:
+    - any-glob-to-any-file: 'backend/**'
+    - any-glob-to-any-file: 'back-fastapi/**'
+
+Frontend:
+  - changed-files:
+    - any-glob-to-any-file: 'frontend/**'
+
+CI/CD:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'
