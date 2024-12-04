@@ -45,7 +45,7 @@ export function TShirtDesigner() {
       setIsGenerating(true);
       // TODO: APIを呼び出してデザインを生成する処理を実装
       console.log("Generating design with prompt:", prompt);
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 仮の遅延
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 仮の遅延
     } catch (error) {
       console.error("Error generating design:", error);
     } finally {
@@ -59,10 +59,7 @@ export function TShirtDesigner() {
         {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <PromptSection 
-              prompt={prompt} 
-              onPromptChange={setPrompt}
-            />
+            <PromptSection prompt={prompt} onPromptChange={setPrompt} />
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -96,9 +93,9 @@ export function TShirtDesigner() {
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
             <div className="flex justify-center">
               <div className="w-full max-w-md">
-                <TShirtPreview 
-                  style={selectedStyle} 
-                  colors={selectedColors} 
+                <TShirtPreview
+                  style={selectedStyle}
+                  colors={selectedColors}
                   view="front"
                 />
               </div>

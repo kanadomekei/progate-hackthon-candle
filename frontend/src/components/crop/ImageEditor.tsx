@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { RefObject } from 'react';
+import { RefObject } from "react";
 
 interface ImageEditorProps {
   cvsRef: RefObject<HTMLCanvasElement>;
@@ -21,7 +21,7 @@ export function ImageEditor({
   onMouseMove,
   onMouseUp,
   onWheel,
-  onCropImage
+  onCropImage,
 }: ImageEditorProps) {
   return (
     <div className="lg:col-span-9 space-y-6">
@@ -36,9 +36,9 @@ export function ImageEditor({
           onMouseLeave={onMouseUp}
           onWheel={onWheel}
           className="w-full max-w-full cursor-move rounded-lg"
-          style={{ 
-            backgroundColor: '#f8f9fa',
-            border: '2px solid #e2e8f0' 
+          style={{
+            backgroundColor: "#f8f9fa",
+            border: "2px solid #e2e8f0",
           }}
         />
       </div>
@@ -49,13 +49,22 @@ export function ImageEditor({
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg
                     transition-colors duration-200 flex items-center space-x-2"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d="M5 15l7-7 7 7" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 15l7-7 7 7"
+            />
           </svg>
           <span>画像を切り取る</span>
         </button>
       </div>
     </div>
   );
-} 
+}

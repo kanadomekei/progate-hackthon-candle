@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from "react";
 
 interface ControlPanelProps {
   scale: number;
@@ -9,7 +9,12 @@ interface ControlPanelProps {
   onRotationChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function ControlPanel({ scale, rotation, onScaleChange, onRotationChange }: ControlPanelProps) {
+export function ControlPanel({
+  scale,
+  rotation,
+  onScaleChange,
+  onRotationChange,
+}: ControlPanelProps) {
   return (
     <div className="lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
       <div className="space-y-6">
@@ -58,4 +63,4 @@ export function ControlPanel({ scale, rotation, onScaleChange, onRotationChange 
       </div>
     </div>
   );
-} 
+}

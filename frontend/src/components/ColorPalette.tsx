@@ -13,28 +13,32 @@ const COLOR_SCHEMES: (ColorScheme & { promptText: string })[] = [
     primary: "#ffffff",
     secondary: "#000000",
     accent: "#ff0000",
-    promptText: "シンプルでクラシックなデザイン、白地に黒のアクセントと赤のポイント",
+    promptText:
+      "シンプルでクラシックなデザイン、白地に黒のアクセントと赤のポイント",
   },
   {
     name: "Ocean",
     primary: "#e3f2fd",
     secondary: "#1976d2",
     accent: "#004ba0",
-    promptText: "爽やかな海をイメージした青系のグラデーション、波のような曲線を取り入れたデザイン",
+    promptText:
+      "爽やかな海をイメージした青系のグラデーション、波のような曲線を取り入れたデザイン",
   },
   {
     name: "Forest",
     primary: "#e8f5e9",
     secondary: "#388e3c",
     accent: "#00600f",
-    promptText: "自然な緑の色合いを使用し、森や葉をモチーフにした癒しのデザイン",
+    promptText:
+      "自然な緑の色合いを使用し、森や葉をモチーフにした癒しのデザイン",
   },
   {
     name: "Sunset",
     primary: "#fff3e0",
     secondary: "#f57c00",
     accent: "#bb4d00",
-    promptText: "夕暮れをイメージした暖かみのあるオレンジ系のグラデーション、太陽や光をモチーフにしたデザイン",
+    promptText:
+      "夕暮れをイメージした暖かみのあるオレンジ系のグラデーション、太陽や光をモチーフにしたデザイン",
   },
   {
     name: "Monochrome",

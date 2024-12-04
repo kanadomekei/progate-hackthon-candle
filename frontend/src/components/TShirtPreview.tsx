@@ -5,7 +5,7 @@ import { DesignStyle, ColorScheme } from "./TShirtDesigner";
 interface TShirtPreviewProps {
   style: DesignStyle;
   colors: ColorScheme;
-  view: 'front' | 'back';
+  view: "front" | "back";
 }
 
 export function TShirtPreview({ colors, view }: TShirtPreviewProps) {
@@ -13,7 +13,7 @@ export function TShirtPreview({ colors, view }: TShirtPreviewProps) {
     <div className="bg-gray-50 rounded-lg p-4">
       <div className="flex justify-center items-center mb-3">
         <span className="px-4 py-1.5 bg-gray-100 rounded-full text-sm font-medium text-gray-700">
-          {view === 'front' ? 'Front View' : 'Back View'}
+          {view === "front" ? "Front View" : "Back View"}
         </span>
       </div>
 
@@ -74,7 +74,7 @@ export function TShirtPreview({ colors, view }: TShirtPreviewProps) {
             className="text-sm"
             fill={colors.secondary}
           >
-            {view === 'front' ? 'Front Design Area' : 'Back Design Area'}
+            {view === "front" ? "Front Design Area" : "Back Design Area"}
           </text>
         </svg>
       </div>
