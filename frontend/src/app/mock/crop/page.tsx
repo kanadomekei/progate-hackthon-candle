@@ -2,6 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+interface CroppedImage {
+  id: string;
+  dataUrl: string;
+  timestamp: Date;
+}
+
 export default function CropPage() {
   const cvsRef = useRef<HTMLCanvasElement>(null);
   const outRef = useRef<HTMLCanvasElement>(null);
@@ -14,6 +20,7 @@ export default function CropPage() {
   const [imagePos, setImagePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const requestRef = useRef<number>();
+  const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
 
   // 定数
   const CANVAS_WIDTH = 600;
@@ -163,7 +170,7 @@ export default function CropPage() {
     };
   }, [scale, rotation, imagePos, tshirtCoordinates, imageLoaded]);
 
-  // 画像の切り取り処理
+  // 画像の切り取り処理を更新
   const cropImage = () => {
     const out = outRef.current;
     const img = imgRef.current;
@@ -196,18 +203,27 @@ export default function CropPage() {
       img.height * v,
       rotation
     );
+
+    // 切り取った画像を履歴に追加
+    const newCroppedImage: CroppedImage = {
+      id: crypto.randomUUID(),
+      dataUrl: out.toDataURL('image/png'),
+      timestamp: new Date()
+    };
+    setCroppedImages(prev => [...prev, newCroppedImage]);
   };
 
-  // 画像のダウンロード処理
-  const downloadImage = () => {
-    const out = outRef.current;
-    if (!out) return;
-
-    const dataUrl = out.toDataURL('image/png');
+  // 特定の画像をダウンロード
+  const downloadImage = (image: CroppedImage) => {
     const downloadLink = document.createElement('a');
-    downloadLink.href = dataUrl;
-    downloadLink.download = 'cropped_image.png';
+    downloadLink.href = image.dataUrl;
+    downloadLink.download = `cropped_image_${image.timestamp.getTime()}.png`;
     downloadLink.click();
+  };
+
+  // 画像の削除
+  const deleteImage = (id: string) => {
+    setCroppedImages(prev => prev.filter(img => img.id !== id));
   };
 
   // マウスイベントハンドラー
@@ -334,7 +350,7 @@ export default function CropPage() {
             </div>
 
             {/* アクションボタン */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-start items-center space-x-4">
               <button
                 onClick={cropImage}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg
@@ -342,9 +358,9 @@ export default function CropPage() {
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                        d="M7 21h10a2 2 0 002-2V9l-6-6H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        d="M5 15l7-7 7 7" />
                 </svg>
-                <span>画像を保存</span>
+                <span>画像を切り取る</span>
               </button>
             </div>
 
@@ -364,6 +380,47 @@ export default function CropPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 切り取った画像の履歴 */}
+      <div className="mt-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">切り取った画像一覧</h3>
+        {croppedImages.length === 0 ? (
+          <p className="text-gray-500">まだ切り取った画像はありません</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {croppedImages.map((image) => (
+              <div key={image.id} className="bg-white rounded-lg shadow-sm p-4">
+                <img 
+                  src={image.dataUrl} 
+                  alt="切り取った画像" 
+                  className="w-full h-48 object-contain mb-4"
+                />
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500">
+                    {image.timestamp.toLocaleString()}
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => downloadImage(image)}
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md
+                                text-sm transition-colors duration-200"
+                    >
+                      保存
+                    </button>
+                    <button
+                      onClick={() => deleteImage(image.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md
+                                text-sm transition-colors duration-200"
+                    >
+                      削除
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
