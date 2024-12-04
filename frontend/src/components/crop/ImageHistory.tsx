@@ -33,10 +33,7 @@ export function ImageHistory({
                 className="w-full h-48 object-contain mb-4 cursor-pointer"
                 onClick={() => onImageSelect(image)}
               />
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">
-                  {image.timestamp.toLocaleString()}
-                </span>
+              <div className="flex justify-end items-center">
                 <div className="flex space-x-2">
                   <button
                     onClick={() => onDownloadImage(image)}
