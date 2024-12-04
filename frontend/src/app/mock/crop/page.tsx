@@ -7,11 +7,13 @@ export default function CropPage() {
   const outRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(new Image());
   const [scale, setScale] = useState<number>(100);
+  const [rotation, setRotation] = useState<number>(0);
   const [tshirtCoordinates, setTshirtCoordinates] = useState<[number, number][]>([]);
   const [mouseDown, setMouseDown] = useState<boolean>(false);
   const [startPos, setStartPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imagePos, setImagePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+  const requestRef = useRef<number>();
 
   // 定数
   const CANVAS_WIDTH = 600;
@@ -84,6 +86,25 @@ export default function CropPage() {
     ctx.closePath();
   };
 
+  // 画像の描画（回転を含む）
+  const drawRotatedImage = (ctx: CanvasRenderingContext2D, img: HTMLImageElement, x: number, y: number, width: number, height: number, rotation: number) => {
+    ctx.save();
+    
+    // 回転の中心を設定
+    ctx.translate(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+    ctx.rotate(rotation * Math.PI / 180);
+    ctx.translate(-CANVAS_WIDTH / 2, -CANVAS_HEIGHT / 2);
+    
+    // 画像を描画
+    ctx.drawImage(
+      img,
+      0, 0, img.width, img.height,
+      x, y, width, height
+    );
+    
+    ctx.restore();
+  };
+
   // キャンバスの描画
   const drawCanvas = () => {
     const cvs = cvsRef.current;
@@ -97,7 +118,7 @@ export default function CropPage() {
       return;
     }
 
-    const ctx = cvs.getContext('2d');
+    const ctx = cvs.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     const v = scale * 0.01;
@@ -107,14 +128,15 @@ export default function CropPage() {
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     try {
-      // 画像の描画
-      ctx.drawImage(
+      // 画像の描画（回転を含む）
+      drawRotatedImage(
+        ctx,
         img,
-        0, 0, img.width, img.height,
         (CANVAS_WIDTH / 2) - imagePos.x * v,
         (CANVAS_HEIGHT / 2) - imagePos.y * v,
         img.width * v,
-        img.height * v
+        img.height * v,
+        rotation
       );
 
       // Tシャツ型の描画
@@ -126,13 +148,28 @@ export default function CropPage() {
     }
   };
 
+  // アニメーションフレームを使用した描画更新
+  const animate = () => {
+    drawCanvas();
+    requestRef.current = requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
+    requestRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, [scale, rotation, imagePos, tshirtCoordinates, imageLoaded]);
+
   // 画像のクロップ
   const cropImage = () => {
     const out = outRef.current;
     const img = imgRef.current;
     if (!out || !img || !imageLoaded) return;
 
-    const ctx = out.getContext('2d');
+    const ctx = out.getContext('2d', { alpha: false });
     if (!ctx) return;
 
     ctx.clearRect(0, 0, OUT_WIDTH, OUT_HEIGHT);
@@ -148,15 +185,16 @@ export default function CropPage() {
     ctx.closePath();
     ctx.clip();
 
-    // 切り抜いた画像の描画
+    // 切り抜いた画像の描画（回転を含む）
     const v = scale * 0.01;
-    ctx.drawImage(
+    drawRotatedImage(
+      ctx,
       img,
-      0, 0, img.width, img.height,
       (OUT_WIDTH / 2) - imagePos.x * v,
       (OUT_HEIGHT / 2) - imagePos.y * v,
       img.width * v,
-      img.height * v
+      img.height * v,
+      rotation
     );
 
     // ダウンロードリンクの生成
@@ -186,7 +224,6 @@ export default function CropPage() {
     }));
     
     setStartPos({ x: e.pageX, y: e.pageY });
-    drawCanvas();
   };
 
   const handleMouseUp = () => {
@@ -197,25 +234,38 @@ export default function CropPage() {
     const delta = e.deltaY * -0.05;
     const newScale = Math.min(400, Math.max(10, scale + delta));
     setScale(newScale);
-    drawCanvas();
   };
 
-  useEffect(() => {
-    drawCanvas();
-  }, [scale, tshirtCoordinates, imageLoaded]);
+  const handleRotationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRotation(Number(e.target.value));
+  };
 
   return (
     <div className="p-4">
       <div className="mb-4">
-        Scale: {scale}%
-        <input
-          type="range"
-          min="10"
-          max="400"
-          value={scale}
-          onChange={(e) => setScale(Number(e.target.value))}
-          className="w-[300px] mb-4"
-        />
+        <div className="mb-2">
+          Scale: {scale}%
+          <input
+            type="range"
+            min="10"
+            max="400"
+            value={scale}
+            onChange={(e) => setScale(Number(e.target.value))}
+            className="w-[300px] mb-4 block"
+          />
+        </div>
+        <div className="mb-2">
+          Rotation: {rotation}°
+          <input
+            type="range"
+            min="-180"
+            max="180"
+            step="0.1"
+            value={rotation}
+            onChange={handleRotationChange}
+            className="w-[300px] mb-4 block"
+          />
+        </div>
       </div>
       <div className="mb-4">
         <canvas
