@@ -21,6 +21,7 @@ export default function CropPage() {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const requestRef = useRef<number>();
   const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
+  const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
 
   // 定数
   const CANVAS_WIDTH = 600;
@@ -270,6 +271,16 @@ export default function CropPage() {
     setRotation(Number(e.target.value));
   };
 
+  // 画像選択ハンドラーを追加
+  const handleImageSelect = (image: CroppedImage) => {
+    setSelectedImage(image);
+  };
+
+  // モーダルを閉じるハンドラー
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -387,7 +398,8 @@ export default function CropPage() {
                 <img 
                   src={image.dataUrl} 
                   alt="切り取った画像" 
-                  className="w-full h-48 object-contain mb-4"
+                  className="w-full h-48 object-contain mb-4 cursor-pointer"
+                  onClick={() => handleImageSelect(image)}
                 />
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-500">
@@ -415,6 +427,48 @@ export default function CropPage() {
           </div>
         )}
       </div>
+
+      {/* モーダルコンポーネントを追加 */}
+      {selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+             onClick={handleCloseModal}>
+          <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4"
+               onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-medium">切り取った画像の確認</h3>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <img
+                src={selectedImage.dataUrl}
+                alt="拡大表示"
+                className="max-h-[70vh] w-full object-contain"
+              />
+            </div>
+            <div className="mt-4 flex justify-end space-x-3">
+              <button
+                onClick={() => downloadImage(selectedImage)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+              >
+                ダウンロード
+              </button>
+              <button
+                onClick={handleCloseModal}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
