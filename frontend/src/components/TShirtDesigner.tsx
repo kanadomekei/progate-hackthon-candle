@@ -29,6 +29,7 @@ export function TShirtDesigner() {
     accent: "#ff0000",
   });
   const [prompt, setPrompt] = useState(STYLE_PROMPTS.minimal);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
     setPrompt(promptText);
@@ -39,13 +40,29 @@ export function TShirtDesigner() {
     setPrompt(STYLE_PROMPTS[style]);
   };
 
+  const handleGenerateDesign = async () => {
+    try {
+      setIsGenerating(true);
+      // TODO: APIを呼び出してデザインを生成する処理を実装
+      console.log("Generating design with prompt:", prompt);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 仮の遅延
+    } catch (error) {
+      console.error("Error generating design:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-12 gap-8">
         {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <PromptSection prompt={prompt} onPromptChange={setPrompt} />
+            <PromptSection 
+              prompt={prompt} 
+              onPromptChange={setPrompt}
+            />
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -60,6 +77,16 @@ export function TShirtDesigner() {
                 onStyleSelect={handleStyleSelect}
               />
             </div>
+          </div>
+          {/* デザイン生成ボタン */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <button
+              onClick={handleGenerateDesign}
+              disabled={isGenerating}
+              className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400"
+            >
+              {isGenerating ? "create design..." : "create design"}
+            </button>
           </div>
         </div>
 
