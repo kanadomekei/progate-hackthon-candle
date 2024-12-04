@@ -14,8 +14,8 @@ export default function CropPage() {
   const [imageLoaded, setImageLoaded] = useState<boolean>(false);
 
   // 定数
-  const CANVAS_WIDTH = 700;
-  const CANVAS_HEIGHT = 450;
+  const CANVAS_WIDTH = 600;
+  const CANVAS_HEIGHT = 430;
   const OUT_WIDTH = 600;
   const OUT_HEIGHT = 430;
 
@@ -175,10 +175,17 @@ export default function CropPage() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!mouseDown) return;
+    
+    const dx = startPos.x - e.pageX;
+    const dy = startPos.y - e.pageY;
     const v = scale * 0.01;
-    const newX = imagePos.x + (startPos.x - e.pageX) / v;
-    const newY = imagePos.y + (startPos.y - e.pageY) / v;
-    setImagePos({ x: newX, y: newY });
+    
+    setImagePos(prev => ({
+      x: prev.x + dx / v,
+      y: prev.y + dy / v
+    }));
+    
+    setStartPos({ x: e.pageX, y: e.pageY });
     drawCanvas();
   };
 
