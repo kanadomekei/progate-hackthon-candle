@@ -45,7 +45,8 @@ export function TShirtDesigner() {
       <div className="flex flex-row gap-8">
         {/* 左側: Tシャツプレビュー */}
         <div className="w-1/3">
-          <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
+          <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6 space-y-6">
+            <TShirtPreview style={selectedStyle} colors={selectedColors} />
             <TShirtPreview style={selectedStyle} colors={selectedColors} />
           </div>
         </div>
