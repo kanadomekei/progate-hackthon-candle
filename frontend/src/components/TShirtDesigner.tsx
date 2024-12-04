@@ -17,7 +17,7 @@ export type ColorScheme = {
 
 export function TShirtDesigner() {
   const [selectedStyle, setSelectedStyle] = useState<DesignStyle>("minimal");
-  const [selectedColors, setSelectedColors] = useState<ColorScheme>({
+  const [selectedColors] = useState<ColorScheme>({
     name: "Default",
     primary: "#ffffff",
     secondary: "#000000",
@@ -25,8 +25,7 @@ export function TShirtDesigner() {
   });
   const [prompt, setPrompt] = useState("");
 
-  const handleColorSelect = (colors: ColorScheme, promptText: string) => {
-    setSelectedColors(colors);
+  const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
     setPrompt(promptText);
   };
 
