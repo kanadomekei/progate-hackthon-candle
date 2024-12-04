@@ -15,6 +15,12 @@ export type ColorScheme = {
   accent: string;
 };
 
+const STYLE_PROMPTS = {
+  minimal: "Create a minimalist design with clean lines and simple shapes",
+  art: "Design an artistic pattern with bold and expressive elements",
+  illustration: "Generate a detailed illustration with creative drawings",
+};
+
 export function TShirtDesigner() {
   const [selectedStyle, setSelectedStyle] = useState<DesignStyle>("minimal");
   const [selectedColors] = useState<ColorScheme>({
@@ -23,10 +29,15 @@ export function TShirtDesigner() {
     secondary: "#000000",
     accent: "#ff0000",
   });
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(STYLE_PROMPTS.minimal);
 
   const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
     setPrompt(promptText);
+  };
+
+  const handleStyleSelect = (style: DesignStyle) => {
+    setSelectedStyle(style);
+    setPrompt(STYLE_PROMPTS[style]);
   };
 
   return (
@@ -60,7 +71,7 @@ export function TShirtDesigner() {
             <div className="bg-white rounded-lg shadow-lg p-6">
               <StyleSelector
                 selectedStyle={selectedStyle}
-                onStyleSelect={setSelectedStyle}
+                onStyleSelect={handleStyleSelect}
               />
             </div>
 

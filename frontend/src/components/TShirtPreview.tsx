@@ -75,10 +75,7 @@ export function TShirtPreview({ style, colors }: TShirtPreviewProps) {
         </svg>
       </div>
 
-      <div className="mt-4 flex justify-between items-center">
-        <div className="text-sm text-gray-600">
-          Style: <span className="font-medium capitalize">{style}</span>
-        </div>
+      <div className="mt-4 flex justify-end">
         <div className="flex space-x-2">
           <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
             Front View
