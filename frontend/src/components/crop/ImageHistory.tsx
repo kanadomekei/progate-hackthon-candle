@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { CroppedImage } from '@/components/crop/types';
+import { CroppedImage } from './types';
 
 interface ImageHistoryProps {
   croppedImages: CroppedImage[];
@@ -22,7 +22,7 @@ export function ImageHistory({
       {croppedImages.length === 0 ? (
         <p className="text-gray-500">まだ切り取った画像はありません</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {croppedImages.map((image) => (
             <div key={image.id} className="bg-white rounded-lg shadow-sm p-4">
               <Image 
@@ -30,31 +30,13 @@ export function ImageHistory({
                 alt="切り取った画像"
                 width={300}
                 height={200}
-                className="w-full h-48 object-contain mb-4 cursor-pointer"
+                className="w-full h-48 object-contain cursor-pointer"
                 onClick={() => onImageSelect(image)}
               />
-              <div className="flex justify-end items-center">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => onDownloadImage(image)}
-                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md
-                              text-sm transition-colors duration-200"
-                  >
-                    保存
-                  </button>
-                  <button
-                    onClick={() => onDeleteImage(image.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md
-                              text-sm transition-colors duration-200"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
             </div>
           ))}
         </div>
       )}
     </div>
   );
-} 
+}

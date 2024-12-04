@@ -1,19 +1,20 @@
 'use client';
 
 import Image from 'next/image';
-import { CroppedImage } from '@/components/crop/types';
+import { CroppedImage } from './types';
 
 interface ImageModalProps {
   selectedImage: CroppedImage;
   onClose: () => void;
   onDownload: (image: CroppedImage) => void;
+  onDelete: (id: string) => void;
 }
 
-export function ImageModal({ selectedImage, onClose, onDownload }: ImageModalProps) {
+export function ImageModal({ selectedImage, onClose, onDownload, onDelete }: ImageModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
          onClick={onClose}>
-      <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4"
+      <div className="bg-white rounded-lg p-6 max-w-5xl w-full mx-4"
            onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-medium">切り取った画像の確認</h3>
@@ -30,12 +31,18 @@ export function ImageModal({ selectedImage, onClose, onDownload }: ImageModalPro
           <Image
             src={selectedImage.dataUrl}
             alt="拡大表示"
-            width={800}
-            height={600}
+            width={1200}
+            height={900}
             className="max-h-[70vh] w-full object-contain"
           />
         </div>
         <div className="mt-4 flex justify-end space-x-3">
+          <button
+            onClick={() => onDelete(selectedImage.id)}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+          >
+            削除
+          </button>
           <button
             onClick={() => onDownload(selectedImage)}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
@@ -52,4 +59,4 @@ export function ImageModal({ selectedImage, onClose, onDownload }: ImageModalPro
       </div>
     </div>
   );
-} 
+}

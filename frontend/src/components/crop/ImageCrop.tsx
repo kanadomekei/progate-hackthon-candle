@@ -220,6 +220,9 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   // Delete image
   const deleteImage = (id: string) => {
     setCroppedImages(prev => prev.filter(img => img.id !== id));
+    if (selectedImage?.id === id) {
+      setSelectedImage(null);
+    }
   };
 
   // Mouse event handlers
@@ -319,6 +322,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
           selectedImage={selectedImage}
           onClose={handleCloseModal}
           onDownload={downloadImage}
+          onDelete={deleteImage}
         />
       )}
     </div>
