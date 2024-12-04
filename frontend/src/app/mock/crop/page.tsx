@@ -1,17 +1,22 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ControlPanel } from '@/components/crop/ControlPanel';
+import { ImageEditor } from '@/components/crop/ImageEditor';
+import { ImageHistory } from '@/components/crop/ImageHistory';
+import { ImageModal } from '@/components/crop/ImageModal';
+import { CroppedImage } from '@/components/crop/types';
 
-interface CroppedImage {
-  id: string;
-  dataUrl: string;
-  timestamp: Date;
-}
+// 定数
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 430;
+const OUT_WIDTH = 600;
+const OUT_HEIGHT = 430;
 
 export default function CropPage() {
   const cvsRef = useRef<HTMLCanvasElement>(null);
   const outRef = useRef<HTMLCanvasElement>(null);
-  const imgRef = useRef<HTMLImageElement>(new Image());
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const [scale, setScale] = useState<number>(100);
   const [rotation, setRotation] = useState<number>(0);
   const [tshirtCoordinates, setTshirtCoordinates] = useState<[number, number][]>([]);
@@ -22,12 +27,6 @@ export default function CropPage() {
   const requestRef = useRef<number>();
   const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
-
-  // 定数
-  const CANVAS_WIDTH = 600;
-  const CANVAS_HEIGHT = 430;
-  const OUT_WIDTH = 600;
-  const OUT_HEIGHT = 430;
 
   // 座標データの読み込み
   useEffect(() => {
@@ -51,6 +50,7 @@ export default function CropPage() {
 
   // 画像の読み込み
   useEffect(() => {
+    imgRef.current = new Image();
     const img = imgRef.current;
     
     const handleLoad = () => {
@@ -71,12 +71,11 @@ export default function CropPage() {
 
     img.addEventListener('load', handleLoad);
     img.addEventListener('error', handleError);
-
     img.src = '/sample.png';
 
     return () => {
-      img.removeEventListener('load', handleLoad);
-      img.removeEventListener('error', handleError);
+      img?.removeEventListener('load', handleLoad);
+      img?.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -284,101 +283,32 @@ export default function CropPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* ヘッダー */}
         <header className="mb-8">
           <h1 className="text-2xl font-bold text-gray-800">画像編集ツール</h1>
           <p className="text-gray-600">画像をドラッグして位置を調整し、スケールと回転を設定してください</p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* コントロールパネル */}
-          <div className="lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
-            <div className="space-y-6">
-              {/* スケールコントロール */}
-              <div>
-                <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
-                  <span>拡大・縮小</span>
-                  <span className="text-blue-600">{scale}%</span>
-                </label>
-                <input
-                  type="range"
-                  min="10"
-                  max="400"
-                  value={scale}
-                  onChange={(e) => setScale(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-              </div>
+          <ControlPanel
+            scale={scale}
+            rotation={rotation}
+            onScaleChange={setScale}
+            onRotationChange={handleRotationChange}
+          />
 
-              {/* 回転コントロール */}
-              <div>
-                <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
-                  <span>回転</span>
-                  <span className="text-blue-600">{rotation}°</span>
-                </label>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="0.1"
-                  value={rotation}
-                  onChange={handleRotationChange}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-              </div>
-
-              {/* 操作説明 */}
-              <div className="border-t pt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">操作方法</h3>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• ドラッグ: 画像の位置を移動</li>
-                  <li>• マウスホイール: 拡大・縮小</li>
-                  <li>• スライダー: 回転角度の調整</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* メインエディター */}
-          <div className="lg:col-span-9 space-y-6">
-            {/* プレビューキャンバス */}
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <canvas
-                ref={cvsRef}
-                width={CANVAS_WIDTH}
-                height={CANVAS_HEIGHT}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onWheel={handleWheel}
-                className="w-full max-w-full cursor-move rounded-lg"
-                style={{ 
-                  backgroundColor: '#f8f9fa',
-                  border: '2px solid #e2e8f0' 
-                }}
-              />
-            </div>
-
-            {/* アクションボタン */}
-            <div className="flex justify-start items-center space-x-4">
-              <button
-                onClick={cropImage}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg
-                          transition-colors duration-200 flex items-center space-x-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                        d="M5 15l7-7 7 7" />
-                </svg>
-                <span>画像を切り取る</span>
-              </button>
-            </div>
-          </div>
+          <ImageEditor
+            cvsRef={cvsRef}
+            CANVAS_WIDTH={CANVAS_WIDTH}
+            CANVAS_HEIGHT={CANVAS_HEIGHT}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onWheel={handleWheel}
+            onCropImage={cropImage}
+          />
         </div>
       </div>
 
-      {/* 非表示のキャンバス */}
       <canvas
         ref={outRef}
         width={OUT_WIDTH}
@@ -386,88 +316,19 @@ export default function CropPage() {
         style={{ display: 'none' }}
       />
 
-      {/* 切り取った画像の履歴 */}
-      <div className="mt-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">切り取った画像一覧</h3>
-        {croppedImages.length === 0 ? (
-          <p className="text-gray-500">まだ切り取った画像はありません</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {croppedImages.map((image) => (
-              <div key={image.id} className="bg-white rounded-lg shadow-sm p-4">
-                <img 
-                  src={image.dataUrl} 
-                  alt="切り取った画像" 
-                  className="w-full h-48 object-contain mb-4 cursor-pointer"
-                  onClick={() => handleImageSelect(image)}
-                />
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">
-                    {image.timestamp.toLocaleString()}
-                  </span>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => downloadImage(image)}
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md
-                                text-sm transition-colors duration-200"
-                    >
-                      保存
-                    </button>
-                    <button
-                      onClick={() => deleteImage(image.id)}
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md
-                                text-sm transition-colors duration-200"
-                    >
-                      削除
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <ImageHistory
+        croppedImages={croppedImages}
+        onImageSelect={handleImageSelect}
+        onDownloadImage={downloadImage}
+        onDeleteImage={deleteImage}
+      />
 
-      {/* モーダルコンポーネントを追加 */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-             onClick={handleCloseModal}>
-          <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4"
-               onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-medium">切り取った画像の確認</h3>
-              <button
-                onClick={handleCloseModal}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="bg-gray-100 rounded-lg p-4">
-              <img
-                src={selectedImage.dataUrl}
-                alt="拡大表示"
-                className="max-h-[70vh] w-full object-contain"
-              />
-            </div>
-            <div className="mt-4 flex justify-end space-x-3">
-              <button
-                onClick={() => downloadImage(selectedImage)}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-              >
-                ダウンロード
-              </button>
-              <button
-                onClick={handleCloseModal}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
-              >
-                閉じる
-              </button>
-            </div>
-          </div>
-        </div>
+        <ImageModal
+          selectedImage={selectedImage}
+          onClose={handleCloseModal}
+          onDownload={downloadImage}
+        />
       )}
     </div>
   );
