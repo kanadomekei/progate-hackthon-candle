@@ -15,6 +15,11 @@ Resources:
     Properties:
       PackageType: Image
       MemorySize: 256
+      Policies:
+        - CloudWatchLogsFullAccess
+      LoggingConfig:
+        LogFormat: JSON
+        LogGroup: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
       Events:
         APIEvent:
           Type: HttpApi
@@ -22,6 +27,12 @@ Resources:
       DockerTag: v1
       DockerContext: ./app
       Dockerfile: Dockerfile
+
+  GinFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
+      RetentionInDays: 30
 
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
@@ -58,4 +69,8 @@ Outputs:
   CloudFrontUrl:
     Description: "CloudFront URL"
     Value: !GetAtt CloudFrontDistribution.DomainName
+
+  LogGroupName:
+    Description: "CloudWatch Logs Log Group Name"
+    Value: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
 

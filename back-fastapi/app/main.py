@@ -7,6 +7,7 @@ import json
 import os
 import io
 
+
 app = FastAPI()
 
 
@@ -14,7 +15,6 @@ app = FastAPI()
 async def root():
     print("in root method")
     return {"message": "Hello World"}
-
 
 # モデル
 MODELID = os.getenv("MODELID", "stability.stable-image-ultra-v1:0")
