@@ -8,7 +8,7 @@ interface TShirtPreviewProps {
   view: 'front' | 'back';
 }
 
-export function TShirtPreview({ style, colors, view }: TShirtPreviewProps) {
+export function TShirtPreview({ colors, view }: TShirtPreviewProps) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
       <div className="flex justify-center items-center mb-3">
