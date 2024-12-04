@@ -276,8 +276,8 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <header>
           <h1 className="text-2xl font-bold text-gray-800">画像編集ツール</h1>
           <p className="text-gray-600">画像をドラッグして位置を調整し、スケールと回転を設定してください</p>
         </header>
@@ -301,21 +301,21 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
             onCropImage={cropImage}
           />
         </div>
+
+        <canvas
+          ref={outRef}
+          width={OUT_WIDTH}
+          height={OUT_HEIGHT}
+          style={{ display: 'none' }}
+        />
+
+        <ImageHistory
+          croppedImages={croppedImages}
+          onImageSelect={handleImageSelect}
+          onDownloadImage={downloadImage}
+          onDeleteImage={deleteImage}
+        />
       </div>
-
-      <canvas
-        ref={outRef}
-        width={OUT_WIDTH}
-        height={OUT_HEIGHT}
-        style={{ display: 'none' }}
-      />
-
-      <ImageHistory
-        croppedImages={croppedImages}
-        onImageSelect={handleImageSelect}
-        onDownloadImage={downloadImage}
-        onDeleteImage={deleteImage}
-      />
 
       {selectedImage && (
         <ImageModal
