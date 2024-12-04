@@ -363,24 +363,17 @@ export default function CropPage() {
                 <span>画像を切り取る</span>
               </button>
             </div>
-
-            {/* 出力プレビュー */}
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-4">出力プレビュー</h3>
-              <canvas
-                ref={outRef}
-                width={OUT_WIDTH}
-                height={OUT_HEIGHT}
-                className="w-full max-w-full rounded-lg"
-                style={{ 
-                  backgroundColor: '#f8f9fa',
-                  border: '2px solid #e2e8f0' 
-                }}
-              />
-            </div>
           </div>
         </div>
       </div>
+
+      {/* 非表示のキャンバス */}
+      <canvas
+        ref={outRef}
+        width={OUT_WIDTH}
+        height={OUT_HEIGHT}
+        style={{ display: 'none' }}
+      />
 
       {/* 切り取った画像の履歴 */}
       <div className="mt-8">
