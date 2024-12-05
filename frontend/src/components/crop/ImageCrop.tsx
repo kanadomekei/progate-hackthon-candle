@@ -18,7 +18,7 @@ interface ImageCropProps {
 }
 
 // サイズの型を定義
-type TShirtSize = 'S' | 'M' | 'L' | 'XL';
+type TShirtSize = "S" | "M" | "L" | "XL";
 
 export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const cvsRef = useRef<HTMLCanvasElement>(null);
@@ -42,7 +42,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const requestRef = useRef<number>();
   const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
-  const [selectedSize, setSelectedSize] = useState<TShirtSize>('M');
+  const [selectedSize, setSelectedSize] = useState<TShirtSize>("M");
 
   // Load coordinates data
   useEffect(() => {
@@ -106,7 +106,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     const scale = 0.7;
     ctx.moveTo(
       tshirtCoordinates[0][0] * scale + offsetX,
-      tshirtCoordinates[0][1] * scale + offsetY
+      tshirtCoordinates[0][1] * scale + offsetY,
     );
 
     tshirtCoordinates.forEach(([x, y]) => {
@@ -210,7 +210,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
       const scale = 0.7;
       ctx.moveTo(
         tshirtCoordinates[0][0] * scale + offsetX,
-        tshirtCoordinates[0][1] * scale + offsetY
+        tshirtCoordinates[0][1] * scale + offsetY,
       );
       tshirtCoordinates.forEach(([x, y]) => {
         ctx.lineTo(x * scale + offsetX, y * scale + offsetY);
@@ -320,14 +320,14 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
 
         {/* サイズ選択ボタングループを追加 */}
         <div className="flex gap-2">
-          {(['S', 'M', 'L', 'XL'] as const).map((size) => (
+          {(["S", "M", "L", "XL"] as const).map((size) => (
             <button
               key={size}
               onClick={() => handleSizeChange(size)}
               className={`px-4 py-2 rounded ${
                 selectedSize === size
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 hover:bg-gray-300'
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
               }`}
             >
               {size}
