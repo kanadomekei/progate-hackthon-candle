@@ -58,6 +58,7 @@ export function TShirtDesigner() {
 
   const generateImage = async () => {
     setIsLoading(true);
+    console.log("Generating image with prompt:", prompt);
     try {
       const response = await fetch(`${baseURL}/generate-image-stable-diffusion`, {
         method: "POST",
@@ -65,7 +66,7 @@ export function TShirtDesigner() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt: "A beautiful landscape with mountains",
+          prompt: prompt,
         }),
       });
 
@@ -73,7 +74,6 @@ export function TShirtDesigner() {
         throw new Error("画像の生成に失敗しました");
       }
 
-      // レスポンスをBlobとして取得
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setImageUrl(imageUrl);
