@@ -101,10 +101,12 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     if (tshirtCoordinates.length === 0) return;
 
     ctx.beginPath();
-    ctx.moveTo(tshirtCoordinates[0][0], tshirtCoordinates[0][1]);
+    // 座標を50ピクセル右に移動
+    const offsetX = 30;
+    ctx.moveTo(tshirtCoordinates[0][0] + offsetX, tshirtCoordinates[0][1]);
 
     tshirtCoordinates.forEach(([x, y]) => {
-      ctx.lineTo(x, y);
+      ctx.lineTo(x + offsetX, y);
     });
 
     ctx.closePath();
