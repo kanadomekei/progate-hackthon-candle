@@ -6,10 +6,12 @@ export function TestComponent() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
   const generateImage = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/generate-image-stable-diffusion", {
+      const response = await fetch(`${baseURL}/generate-image-stable-diffusion`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
