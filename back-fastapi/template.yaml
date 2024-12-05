@@ -25,6 +25,11 @@ Resources:
       Events:
         ApiEvents:
           Type: HttpApi
+          Properties:
+            Cors:
+              AllowMethods: ['POST', 'GET', 'OPTIONS']
+              AllowHeaders: ['*']
+              AllowOrigins: ['*']
       Timeout: 30
     Metadata:
       Dockerfile: Dockerfile
