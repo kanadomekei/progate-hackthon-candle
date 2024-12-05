@@ -69,3 +69,47 @@ async def generate_image(request_body: GenerateImageRequest):
     image_data = base64.b64decode(base64_image_data)
 
     return StreamingResponse(io.BytesIO(image_data), media_type="image/jpeg")
+
+# 新しいAPIエンドポイントの追加
+@app.post("/generate-image-nova-canvas")
+async def generate_image_nova_canvas(request_body: GenerateImageRequest):
+    prompt = request_body.prompt
+
+    body = {
+        "taskType": "TEXT_IMAGE",
+        "textToImageParams": {
+            "text": prompt
+        },
+        "imageGenerationConfig": {
+            "width": 1024,
+            "height": 1024,
+            "quality": "standard",
+            "numberOfImages": 1
+        }
+    }
+
+    try:
+        # Amazon Nova Canvasモデルの呼び出し
+        nova_canvas_client = boto3.client(
+            "bedrock-runtime",
+            region_name="us-east-1"
+        )
+        response = nova_canvas_client.invoke_model(
+            modelId="amazon.nova-canvas-v1:0",
+            body=json.dumps(body)
+        )
+        model_response = json.loads(response["body"].read())
+    except Exception as e:
+        # モデル呼び出しエラー処理
+        error_message = f"Image generation failed: {str(e)}"
+        raise HTTPException(status_code=500, detail=error_message)
+
+    # レスポンスの検証
+    if not model_response or "images" not in model_response or not model_response["images"]:
+        raise HTTPException(status_code=500, detail="Invalid response from the model.")
+
+    base64_image_data = model_response["images"][0]
+
+    image_data = base64.b64decode(base64_image_data)
+
+    return StreamingResponse(io.BytesIO(image_data), media_type="image/jpeg")
