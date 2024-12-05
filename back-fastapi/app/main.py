@@ -113,3 +113,23 @@ async def generate_image_nova_canvas(request_body: ImageGenerationRequest):
         raise HTTPException(
             status_code=500, detail=f"Image generation failed: {str(e)}"
         )
+
+
+class TranslationRequest(BaseModel):
+    text: str
+
+
+@app.post("/translate-jp-to-en")
+async def translate_jp_to_en(request_body: TranslationRequest):
+    translate_client = boto3.client('translate', region_name=REGION)
+    try:
+        response = translate_client.translate_text(
+            Text=request_body.text,
+            SourceLanguageCode='ja',
+            TargetLanguageCode='en'
+        )
+        return {"translated_text": response.get('TranslatedText')}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Translation failed: {str(e)}"
+        )
