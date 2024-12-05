@@ -23,6 +23,9 @@ Resources:
                 - bedrock:InvokeModel
                 - translate:TranslateText
               Resource: "*"
+      LoggingConfig:
+        LogFormat: JSON
+        LogGroup: !Sub "/aws/lambda/${AWS::StackName}-FastAPIFunction"
       Events:
         Api:
           Type: HttpApi
@@ -34,6 +37,12 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./app
       DockerTag: python3.8-v1
+
+  FastAPIFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-FastAPIFunction"
+      RetentionInDays: 30
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
