@@ -17,6 +17,9 @@ interface ImageCropProps {
   imagePath: string;
 }
 
+// サイズの型を定義
+type TShirtSize = 'S' | 'M' | 'L' | 'XL';
+
 export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const cvsRef = useRef<HTMLCanvasElement>(null);
   const outRef = useRef<HTMLCanvasElement>(null);
@@ -39,12 +42,13 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const requestRef = useRef<number>();
   const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
+  const [selectedSize, setSelectedSize] = useState<TShirtSize>('M');
 
   // Load coordinates data
   useEffect(() => {
     async function loadContours() {
       try {
-        const response = await fetch("/Tshirt-S.txt");
+        const response = await fetch(`/Tshirt-${selectedSize}.txt`);
         const text = await response.text();
         const coordinates = text
           .split("\n")
@@ -59,7 +63,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
       }
     }
     loadContours();
-  }, []);
+  }, [selectedSize]);
 
   // Load image
   useEffect(() => {
@@ -287,6 +291,11 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     setSelectedImage(null);
   };
 
+  // サイズ変更ハンドラー
+  const handleSizeChange = (size: TShirtSize) => {
+    setSelectedSize(size);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -296,6 +305,23 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
             画像をドラッグして位置を調整し、スケールと回転を設定してください
           </p>
         </header>
+
+        {/* サイズ選択ボタングループを追加 */}
+        <div className="flex gap-2">
+          {(['S', 'M', 'L', 'XL'] as const).map((size) => (
+            <button
+              key={size}
+              onClick={() => handleSizeChange(size)}
+              className={`px-4 py-2 rounded ${
+                selectedSize === size
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <ControlPanel
