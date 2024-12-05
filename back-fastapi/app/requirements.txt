@@ -10,3 +10,4 @@ typing-extensions==4.12.2
 uvicorn==0.32.0
 boto3
 python-dotenv
+ruff
