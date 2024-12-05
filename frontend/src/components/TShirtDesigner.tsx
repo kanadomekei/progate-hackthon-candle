@@ -30,7 +30,10 @@ export function TShirtDesigner() {
   });
   const [prompt, setPrompt] = useState(STYLE_PROMPTS.minimal);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>();
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
   const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
     setPrompt(promptText);
@@ -50,6 +53,36 @@ export function TShirtDesigner() {
       console.error("Error generating design:", error);
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const generateImage = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${baseURL}/generate-image-stable-diffusion`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: "A beautiful landscape with mountains",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("画像の生成に失敗しました");
+      }
+
+      // レスポンスをBlobとして取得
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setImageUrl(imageUrl);
+      setGeneratedImageUrl(imageUrl);
+    } catch (error) {
+      console.error("エラーが発生しました:", error);
+      alert("画像の生成に失敗しました");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +111,7 @@ export function TShirtDesigner() {
           {/* デザイン生成ボタン */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <button
-              onClick={handleGenerateDesign}
+              onClick={generateImage}
               disabled={isGenerating}
               className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400"
             >

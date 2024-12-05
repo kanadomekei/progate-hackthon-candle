@@ -1,5 +1,4 @@
 import { TShirtDesigner } from "@/components/TShirtDesigner";
-import { TestComponent } from "@/components/TestComponent";
 
 export default function Home() {
   return (
@@ -8,7 +7,6 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center mb-8">
           T-Shirt Designer
         </h1>
-        <TestComponent />
         <TShirtDesigner />
       </div>
     </main>
