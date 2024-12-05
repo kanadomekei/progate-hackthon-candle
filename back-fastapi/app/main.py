@@ -36,49 +36,52 @@ def initialize_bedrock_client():
 
 bedrock_runtime = initialize_bedrock_client()
 
-class GenerateImageRequest(BaseModel):
+class ImageGenerationRequest(BaseModel):
     prompt: str
 
+class ImageGenerator:
+    @staticmethod
+    def decode_and_stream_response(model_response: dict) -> StreamingResponse:
+        if not model_response or "images" not in model_response or not model_response["images"]:
+            raise HTTPException(status_code=500, detail="Invalid response from the model.")
+        
+        base64_image_data = model_response["images"][0]
+        image_data = base64.b64decode(base64_image_data)
+        return StreamingResponse(io.BytesIO(image_data), media_type="image/jpeg")
 
+    @staticmethod
+    def create_bedrock_client(region: str) -> boto3.client:
+        try:
+            return boto3.client(
+                "bedrock-runtime",
+                region_name=region
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to initialize Bedrock client: {e}")
 
-@app.post("/generate-image")
-async def generate_image(request_body: GenerateImageRequest):
-
-    prompt = request_body.prompt
-
+@app.post("/generate-image-stable-diffusion")
+async def generate_image_stable_diffusion(request_body: ImageGenerationRequest):
     body = {
-        "prompt": prompt,
+        "prompt": request_body.prompt,
         "mode": "text-to-image"
     }
 
     try:
-        # モデルの呼び出し
-        response = bedrock_runtime.invoke_model(modelId=MODELID, body=json.dumps(body))
+        response = bedrock_runtime.invoke_model(
+            modelId=MODELID, 
+            body=json.dumps(body)
+        )
         model_response = json.loads(response["body"].read())
+        return ImageGenerator.decode_and_stream_response(model_response)
     except Exception as e:
-        # モデル呼び出しエラー処理
-        error_message = f"Image generation failed: {str(e)}"
-        raise HTTPException(status_code=500, detail=error_message)
+        raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
 
-    # レスポンスの検証
-    if not model_response or "images" not in model_response or not model_response["images"]:
-        raise HTTPException(status_code=500, detail="Invalid response from the model.")
-
-    base64_image_data = model_response["images"][0]
-
-    image_data = base64.b64decode(base64_image_data)
-
-    return StreamingResponse(io.BytesIO(image_data), media_type="image/jpeg")
-
-# 新しいAPIエンドポイントの追加
 @app.post("/generate-image-nova-canvas")
-async def generate_image_nova_canvas(request_body: GenerateImageRequest):
-    prompt = request_body.prompt
-
+async def generate_image_nova_canvas(request_body: ImageGenerationRequest):
     body = {
         "taskType": "TEXT_IMAGE",
         "textToImageParams": {
-            "text": prompt
+            "text": request_body.prompt
         },
         "imageGenerationConfig": {
             "width": 1024,
@@ -89,27 +92,12 @@ async def generate_image_nova_canvas(request_body: GenerateImageRequest):
     }
 
     try:
-        # Amazon Nova Canvasモデルの呼び出し
-        nova_canvas_client = boto3.client(
-            "bedrock-runtime",
-            region_name="us-east-1"
-        )
+        nova_canvas_client = ImageGenerator.create_bedrock_client("us-east-1")
         response = nova_canvas_client.invoke_model(
             modelId="amazon.nova-canvas-v1:0",
             body=json.dumps(body)
         )
         model_response = json.loads(response["body"].read())
+        return ImageGenerator.decode_and_stream_response(model_response)
     except Exception as e:
-        # モデル呼び出しエラー処理
-        error_message = f"Image generation failed: {str(e)}"
-        raise HTTPException(status_code=500, detail=error_message)
-
-    # レスポンスの検証
-    if not model_response or "images" not in model_response or not model_response["images"]:
-        raise HTTPException(status_code=500, detail="Invalid response from the model.")
-
-    base64_image_data = model_response["images"][0]
-
-    image_data = base64.b64decode(base64_image_data)
-
-    return StreamingResponse(io.BytesIO(image_data), media_type="image/jpeg")
+        raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
