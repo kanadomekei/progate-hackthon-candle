@@ -15,14 +15,30 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      MemorySize: 256
+      MemorySize: 512
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
       Events:
         ApiEvents:
           Type: HttpApi
+          Properties:
+            Cors:
+              AllowMethods: ['POST', 'GET', 'OPTIONS']
+              AllowHeaders: ['*']
+              AllowOrigins: ['*']
+      Timeout: 30
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./app
       DockerTag: python3.8-v1
+      Environment:
+        Variables:
+          REGION: us-west-2
+          MODELID: stability.stable-image-ultra-v1:0
 
 Outputs:
   FastAPIURL:
