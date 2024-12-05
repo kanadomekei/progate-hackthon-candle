@@ -29,9 +29,7 @@ def initialize_bedrock_client():
     try:
         return boto3.client(
             "bedrock-runtime",
-            region_name=REGION,
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+            region_name=REGION
         )
     except Exception as e:
         raise RuntimeError(f"Failed to initialize Bedrock client: {e}")
