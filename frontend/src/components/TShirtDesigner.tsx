@@ -43,18 +43,6 @@ export function TShirtDesigner() {
     setPrompt(STYLE_PROMPTS[style]);
   };
 
-  const handleGenerateDesign = async () => {
-    try {
-      setIsGenerating(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setGeneratedImageUrl("/sample2.png");
-    } catch (error) {
-      console.error("Error generating design:", error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const generateImage = async () => {
     setIsGenerating(true);
     console.log("Generating image with prompt:", prompt);
