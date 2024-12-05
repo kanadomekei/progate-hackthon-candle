@@ -30,6 +30,7 @@ export function TShirtDesigner() {
   });
   const [prompt, setPrompt] = useState(STYLE_PROMPTS.minimal);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>();
 
   const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
     setPrompt(promptText);
@@ -43,9 +44,8 @@ export function TShirtDesigner() {
   const handleGenerateDesign = async () => {
     try {
       setIsGenerating(true);
-      // TODO: APIを呼び出してデザインを生成する処理を実装
-      console.log("Generating design with prompt:", prompt);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 仮の遅延
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // 仮の遅延
+      setGeneratedImageUrl("/sample2.png");
     } catch (error) {
       console.error("Error generating design:", error);
     } finally {
@@ -93,11 +93,7 @@ export function TShirtDesigner() {
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
             <div className="flex justify-center">
               <div className="w-full max-w-md">
-                <TShirtPreview
-                  style={selectedStyle}
-                  colors={selectedColors}
-                  view="front"
-                />
+                <TShirtPreview generatedImageUrl={generatedImageUrl} />
               </div>
             </div>
           </div>
