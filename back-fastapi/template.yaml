@@ -23,22 +23,24 @@ Resources:
                 - bedrock:InvokeModel
               Resource: "*"
       Events:
-        ApiEvents:
+        Api:
           Type: HttpApi
           Properties:
-            Cors:
-              AllowMethods: ['POST', 'GET', 'OPTIONS']
-              AllowHeaders: ['*']
-              AllowOrigins: ['*']
+            Path: /{proxy+}
+            Method: ANY
       Timeout: 30
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./app
       DockerTag: python3.8-v1
-      Environment:
-        Variables:
-          REGION: us-west-2
-          MODELID: stability.stable-image-ultra-v1:0
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods: ['POST', 'GET', 'OPTIONS']
+        AllowHeaders: ['*']
+        AllowOrigins: ['*']
 
 Outputs:
   FastAPIURL:
