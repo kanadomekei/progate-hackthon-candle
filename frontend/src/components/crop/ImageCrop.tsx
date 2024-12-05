@@ -44,7 +44,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   useEffect(() => {
     async function loadContours() {
       try {
-        const response = await fetch("/contourss.txt");
+        const response = await fetch("/Tshirt-S.txt");
         const text = await response.text();
         const coordinates = text
           .split("\n")
