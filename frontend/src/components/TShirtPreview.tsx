@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 interface TShirtPreviewProps {
   generatedImageUrl?: string;
 }
@@ -8,9 +10,11 @@ export function TShirtPreview({ generatedImageUrl }: TShirtPreviewProps) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
       {generatedImageUrl ? (
-        <img
+        <Image
           src={generatedImageUrl}
           alt="Generated T-shirt design"
+          width={500}
+          height={667}
           className="w-full h-auto rounded-lg"
         />
       ) : (
