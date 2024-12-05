@@ -1,12 +1,15 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
+from dotenv import load_dotenv
 import base64
 import boto3
 import json
 import os
 import io
 
+# .envファイルの読み込み
+load_dotenv()
 
 app = FastAPI()
 
@@ -19,12 +22,21 @@ async def root():
 # モデル
 MODELID = os.getenv("MODELID", "stability.stable-image-ultra-v1:0")
 REGION = os.getenv("REGION", "us-west-2")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
-# Bedrock
-try:
-    bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
-except Exception as e:
-    raise RuntimeError(f"Failed to initialize Bedrock client: {e}")
+def initialize_bedrock_client():
+    try:
+        return boto3.client(
+            "bedrock-runtime",
+            region_name=REGION,
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+        )
+    except Exception as e:
+        raise RuntimeError(f"Failed to initialize Bedrock client: {e}")
+
+bedrock_runtime = initialize_bedrock_client()
 
 class GenerateImageRequest(BaseModel):
     prompt: str
@@ -47,7 +59,8 @@ async def generate_image(request_body: GenerateImageRequest):
         model_response = json.loads(response["body"].read())
     except Exception as e:
         # モデル呼び出しエラー処理
-        raise HTTPException(status_code=500, detail=f"Image generation failed: {str(e)}")
+        error_message = f"Image generation failed: {str(e)}"
+        raise HTTPException(status_code=500, detail=error_message)
 
     # レスポンスの検証
     if not model_response or "images" not in model_response or not model_response["images"]:
