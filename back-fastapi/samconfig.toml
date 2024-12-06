@@ -1,0 +1,10 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "sam-app"
+resolve_s3 = true
+s3_prefix = "sam-app"
+region = "us-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = ["FastAPIFunction=509164353880.dkr.ecr.us-west-2.amazonaws.com/samapp7427b055/fastapifunctionead79d0drepo"]

@@ -1,14 +1,15 @@
 services:
   backend:
     build:
-      context: ./backend/app
+      context: ./back-fastapi/app
       dockerfile: Dockerfile  
     ports:
       - "8000:8000"
     environment:
       - PORT=8000
-      - GIN_MODE=release
-    command: ["/app/bootstrap"]
+    volumes:
+      - ./back-fastapi/app:/var/task
+    command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
 
   frontend:
     build:
@@ -20,17 +21,17 @@ services:
       - ./frontend:/app
     command: sh -c "npm install && npm run dev"
 
-  dynamodb-local:
-    image: amazon/dynamodb-local
-    ports:
-      - "9000:8000"
-    volumes:
-      - "./data:/data"
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]
+  # dynamodb-local:
+  #   image: amazon/dynamodb-local
+  #   ports:
+  #     - "9000:8000"
+  #   volumes:
+  #     - "./data:/data"
+  #   command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/data"]
 
-  dynamodb-admin:
-    image: aaronshaf/dynamodb-admin
-    ports:
-      - "8001:8001"
-    environment:
-      - DYNAMO_ENDPOINT=http://dynamodb-local:8000
+  # dynamodb-admin:
+  #   image: aaronshaf/dynamodb-admin
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - DYNAMO_ENDPOINT=http://dynamodb-local:8000

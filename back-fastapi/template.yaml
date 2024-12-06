@@ -1,38 +1,56 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Go-Gin
+  python3.8
 
-  Sample SAM Template for Go-Gin
+  Sample SAM Template for FastAPI
 
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 10
 
 Resources:
-  GinFunction:
+  FastAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      MemorySize: 256
+      MemorySize: 512
       Policies:
-        - CloudWatchLogsFullAccess
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - translate:TranslateText
+              Resource: "*"
       LoggingConfig:
         LogFormat: JSON
-        LogGroup: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
+        LogGroup: !Sub "/aws/lambda/${AWS::StackName}-FastAPIFunction"
       Events:
-        APIEvent:
+        Api:
           Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Timeout: 30
     Metadata:
-      DockerTag: v1
-      DockerContext: ./app
       Dockerfile: Dockerfile
+      DockerContext: ./app
+      DockerTag: python3.8-v1
 
-  GinFunctionLogGroup:
+  FastAPIFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
+      LogGroupName: !Sub "/aws/lambda/${AWS::StackName}-FastAPIFunction"
       RetentionInDays: 30
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods: ['POST', 'GET', 'OPTIONS']
+        AllowHeaders: ['*']
+        AllowOrigins: ['*']
 
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
@@ -62,15 +80,15 @@ Resources:
           CloudFrontDefaultCertificate: true
 
 Outputs:
-  GinApi:
-    Description: "API Gateway endpoint URL for Prod stage for Gin function"
+  FastAPIURL:
+    Description: "API Gateway endpoint URL for Prod stage for FastAPI function"
     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"
-
+  FastAPIFunction:
+    Description: "FastAPI Lambda Function ARN"
+    Value: !GetAtt FastAPIFunction.Arn
+  FastAPIIamRole:
+    Description: "Implicit IAM Role created for FastAPI function"
+    Value: !GetAtt FastAPIFunctionRole.Arn
   CloudFrontUrl:
     Description: "CloudFront URL"
     Value: !GetAtt CloudFrontDistribution.DomainName
-
-  LogGroupName:
-    Description: "CloudWatch Logs Log Group Name"
-    Value: !Sub "/aws/lambda/${AWS::StackName}-GinFunction"
-
