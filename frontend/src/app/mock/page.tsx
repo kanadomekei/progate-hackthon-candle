@@ -104,7 +104,7 @@ const CropComponent: React.FC = () => {
       console.error("Output canvas is null.");
       return;
     }
-    
+
     ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
 
     // Clip T-shirt shape

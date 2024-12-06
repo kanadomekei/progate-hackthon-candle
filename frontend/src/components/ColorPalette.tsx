@@ -14,7 +14,7 @@ const COLOR_SCHEMES: (ColorScheme & { promptText: string })[] = [
     secondary: "#000000",
     accent: "#ff0000",
     promptText:
-      "シンプルでクラシックなデザイン、白地に黒のアクセントと赤のポイント",
+      "A simple and classic design with a white base, black accents, and red highlights",
   },
   {
     name: "Ocean",
@@ -22,7 +22,7 @@ const COLOR_SCHEMES: (ColorScheme & { promptText: string })[] = [
     secondary: "#1976d2",
     accent: "#004ba0",
     promptText:
-      "爽やかな海をイメージした青系のグラデーション、波のような曲線を取り入れたデザイン",
+      "A refreshing ocean-inspired blue gradient design with wave-like curves",
   },
   {
     name: "Forest",
@@ -30,7 +30,7 @@ const COLOR_SCHEMES: (ColorScheme & { promptText: string })[] = [
     secondary: "#388e3c",
     accent: "#00600f",
     promptText:
-      "自然な緑の色合いを使用し、森や葉をモチーフにした癒しのデザイン",
+      "A soothing design using natural green tones, inspired by forests and leaves",
   },
   {
     name: "Sunset",
@@ -38,14 +38,15 @@ const COLOR_SCHEMES: (ColorScheme & { promptText: string })[] = [
     secondary: "#f57c00",
     accent: "#bb4d00",
     promptText:
-      "夕暮れをイメージした暖かみのあるオレンジ系のグラデーション、太陽や光をモチーフにしたデザイン",
+      "A warm orange gradient design inspired by sunsets, featuring sun and light motifs",
   },
   {
     name: "Monochrome",
     primary: "#f5f5f5",
     secondary: "#616161",
     accent: "#212121",
-    promptText: "モノトーンでミニマルな幾何学模様、シンプルでモダンなデザイン",
+    promptText:
+      "A minimalist monochrome geometric pattern, simple and modern design",
   },
 ];
 
