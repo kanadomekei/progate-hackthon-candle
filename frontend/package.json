@@ -21,6 +21,7 @@
     "lucide-react": "^0.464.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
+    "react-color": "^2.19.3",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "rimraf": "^6.0.1",
     "shadcn-ui": "^0.2.3",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.12",
     "@types/react-dom": "^18",
     "eslint": "^9.15.0",
     "eslint-config-next": "15.0.3",

@@ -7,12 +7,7 @@ import { StyleSelector } from "./StyleSelector";
 import { TShirtPreview } from "./TShirtPreview";
 
 export type DesignStyle = "minimal" | "art" | "illustration";
-export type ColorScheme = {
-  name: string;
-  primary: string;
-  secondary: string;
-  accent: string;
-};
+export type ColorScheme = {selectedColor: string;};
 
 const STYLE_PROMPTS = {
   minimal: "シンプルな線とフォルムを使用したミニマルなデザインを作成",
@@ -22,18 +17,8 @@ const STYLE_PROMPTS = {
 
 export function TShirtDesigner() {
   const [selectedStyle, setSelectedStyle] = useState<DesignStyle>("minimal");
-  const [selectedColors] = useState<ColorScheme>({
-    name: "Default",
-    primary: "#ffffff",
-    secondary: "#000000",
-    accent: "#ff0000",
-  });
   const [prompt, setPrompt] = useState(STYLE_PROMPTS.minimal);
   const [isGenerating, setIsGenerating] = useState(false);
-
-  const handleColorSelect = (_colors: ColorScheme, promptText: string) => {
-    setPrompt(promptText);
-  };
 
   const handleStyleSelect = (style: DesignStyle) => {
     setSelectedStyle(style);
@@ -63,10 +48,7 @@ export function TShirtDesigner() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <ColorPalette
-                selectedColors={selectedColors}
-                onColorSelect={handleColorSelect}
-              />
+              <ColorPalette/>
             </div>
             <div className="bg-white rounded-lg shadow-lg p-6">
               <StyleSelector
@@ -91,15 +73,7 @@ export function TShirtDesigner() {
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
-            <div className="flex justify-center">
-              <div className="w-full max-w-md">
-                <TShirtPreview
-                  style={selectedStyle}
-                  colors={selectedColors}
-                  view="front"
-                />
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
