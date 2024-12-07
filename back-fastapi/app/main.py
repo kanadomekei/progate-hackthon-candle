@@ -143,3 +143,4 @@ async def generate_image_to_image(prompt: str, file: UploadFile = File(...), sty
         return decode_and_stream_response({"images": [base64_image]})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+

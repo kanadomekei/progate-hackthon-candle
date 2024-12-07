@@ -11,4 +11,7 @@ uvicorn==0.32.0
 boto3
 python-dotenv
 ruff
+Pillow
+requests
+httpx
 python-multipart

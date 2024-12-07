@@ -44,34 +44,28 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
   const [selectedSize, setSelectedSize] = useState<TShirtSize>("M");
 
-  // Load coordinates data
-  useEffect(() => {
-    async function loadContours() {
-      try {
-        const response = await fetch(`/Tshirt-${selectedSize}.txt`);
-        const text = await response.text();
-        const coordinates = text
-          .split("\n")
-          .filter((line) => line.trim())
-          .map((line) => {
-            const [x, y] = line.split(",").map(Number);
-            return [x, y] as [number, number];
-          });
-        setTshirtCoordinates(coordinates);
-      } catch (error) {
-        console.error("Failed to load contours:", error);
-      }
+  // 座標データの読み込みを最適化
+  const loadContours = async (size: TShirtSize) => {
+    try {
+      const response = await fetch(`/Tshirt-${size}.txt`);
+      const text = await response.text();
+      const coordinates = text
+        .split("\n")
+        .filter((line) => line.trim())
+        .map((line) => {
+          const [x, y] = line.split(",").map(Number);
+          return [x, y] as [number, number];
+        });
+      setTshirtCoordinates(coordinates);
+    } catch (error) {
+      console.error("Failed to load contours:", error);
     }
-    loadContours();
-  }, [selectedSize]);
+  };
 
-  // Load image
-  useEffect(() => {
-    imgRef.current = new Image();
-    const img = imgRef.current;
-
-    const handleLoad = () => {
-      console.log("Image loaded successfully");
+  // 画像読み込みの最適化
+  const loadImage = () => {
+    const img = new Image();
+    img.onload = () => {
       setImageLoaded(true);
       setImagePos({
         x: img.width / 2,
@@ -79,22 +73,35 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
       });
       const scl = parseInt(String((CANVAS_WIDTH / img.width) * 100));
       setScale(scl);
+      imgRef.current = img;
       drawCanvas();
     };
-
-    const handleError = (error: ErrorEvent) => {
+    img.onerror = (error) => {
       console.error("Error loading image:", error);
     };
-
-    img.addEventListener("load", handleLoad);
-    img.addEventListener("error", handleError);
     img.src = imagePath;
+  };
+
+  // useEffectを最小限に
+  useEffect(() => {
+    loadImage();
+    loadContours(selectedSize);
+
+    const animationFrame = requestAnimationFrame(function animate() {
+      drawCanvas();
+      requestAnimationFrame(animate);
+    });
 
     return () => {
-      img?.removeEventListener("load", handleLoad);
-      img?.removeEventListener("error", handleError);
+      cancelAnimationFrame(animationFrame);
     };
-  }, [imagePath]);
+  }, [imagePath, selectedSize]); // drawCanvasはここでは依存配列に含めない
+
+  // サイズ変更時の処理を最適化
+  const handleSizeChange = async (size: TShirtSize) => {
+    setSelectedSize(size);
+    await loadContours(size);
+  };
 
   // Draw T-shirt shape
   const drawTShirtShape = (ctx: CanvasRenderingContext2D) => {
@@ -301,11 +308,6 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
 
   const handleCloseModal = () => {
     setSelectedImage(null);
-  };
-
-  // サイズ変更ハンドラー
-  const handleSizeChange = (size: TShirtSize) => {
-    setSelectedSize(size);
   };
 
   return (
