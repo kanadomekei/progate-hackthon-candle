@@ -4,7 +4,6 @@ import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
 import { ThemeColorSelector } from "./ThemeColorSelector";
 import { DesignPreview } from "./DesignPreview";
-import { NegativePromptSection } from "./NegativePronpt";
 
 export type ThemeColor = {
   name: string;
@@ -13,7 +12,6 @@ export type ThemeColor = {
 
 export function TShirtDesigner() {
   const [selectedThemeColor, setSelectedThemeColor] = useState<ThemeColor | null>(null);
-  const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -68,14 +66,6 @@ export function TShirtDesigner() {
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
-          </div>
-          <div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <NegativePromptSection
-                negativePrompt={negativePrompt}
-                setNegativePrompt={setNegativePrompt}
-              />
-            </div>
           </div>
           <div className="bg-white rounded-lg shadow-lg p-6">
             <ThemeColorSelector
