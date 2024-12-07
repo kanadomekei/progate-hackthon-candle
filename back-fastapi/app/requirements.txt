@@ -13,3 +13,4 @@ python-dotenv
 ruff
 Pillow
 requests
+httpx
