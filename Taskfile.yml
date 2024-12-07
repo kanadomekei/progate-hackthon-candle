@@ -50,3 +50,8 @@ tasks:
     desc: "Starts the devbox shell"
     cmds:
       - devbox shell
+
+  back:deploy:
+    desc: "Deploy the backend"
+    cmds:
+      - cd back-fastapi && sam build -u && sam deploy --region us-west-2 --stack-name progate-hackthon-candle --image-repository 535049764526.dkr.ecr.us-west-2.amazonaws.com/progate/backend
