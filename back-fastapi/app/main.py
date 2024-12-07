@@ -98,14 +98,21 @@ class ImageGenerator:
 @app.post("/generate-image-stable-diffusion")
 async def generate_image_stable_diffusion(request_body: ImageGenerationRequest):
     if translate_en(request_body.prompt):
-        async with httpx.AsyncClient() as client:
-            translate_response = await client.post(
-                "http://127.0.0.1:8000/translate-jp-to-en", 
-                json={"text": request_body.prompt}
+        try:
+            translate_client = boto3.client('translate', region_name=REGION)
+            response = translate_client.translate_text(
+                Text=request_body.prompt,
+                SourceLanguageCode='ja',
+                TargetLanguageCode='en'
             )
-        translated_text = translate_response.text
-        request_body.prompt = translated_text
-        print(request_body)
+            request_body.prompt = response['TranslatedText']
+            print(request_body)
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Translation failed: {str(e)}"
+            )
+
     body = {"prompt": request_body.prompt, "mode": "text-to-image"}
 
     try:
@@ -184,13 +191,19 @@ model_Id = 'stability.stable-diffusion-xl-v1'
 @app.post("/generate-image-to-image-stable-diffusion")
 async def generate_image_stable_diffusion(request_body: ImageGenerationRequestitoi):
     if translate_en(request_body.prompt):
-        async with httpx.AsyncClient() as client:
-            translate_response = await client.post(
-                "http://127.0.0.1:8000/translate-jp-to-en", 
-                json={"text": request_body.prompt}
+        try:
+            translate_client = boto3.client('translate', region_name=REGION)
+            response = translate_client.translate_text(
+                Text=request_body.prompt,
+                SourceLanguageCode='ja',
+                TargetLanguageCode='en'
             )
-        translated_text = translate_response.text
-        request_body.prompt = translated_text
+            request_body.prompt = response['TranslatedText']
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Translation failed: {str(e)}"
+            )
 
     try:
         response = requests.get(request_body.image_url)
