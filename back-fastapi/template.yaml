@@ -16,13 +16,6 @@ Resources:
     Properties:
       PackageType: Image
       MemorySize: 512
-      # Policies:
-      #   - Statement:
-      #       - Effect: Allow
-      #         Action:
-      #           - bedrock:InvokeModel
-      #           - translate:TranslateText
-      #         Resource: "*"
       Role: arn:aws:iam::535049764526:role/progate
       LoggingConfig:
         LogFormat: JSON
@@ -33,7 +26,7 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: ANY
-      Timeout: 30
+      Timeout: 60
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./app
@@ -67,9 +60,13 @@ Resources:
           TargetOriginId: ApiGatewayOrigin
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods: 
+            - DELETE
             - GET
             - HEAD
             - OPTIONS
+            - PATCH
+            - POST
+            - PUT
           CachedMethods: 
             - GET
             - HEAD
@@ -79,6 +76,67 @@ Resources:
               - Authorization
         ViewerCertificate: 
           CloudFrontDefaultCertificate: true
+
+  LogFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+
+  LogFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub "${AWS::StackName}-logs-to-s3"
+      S3DestinationConfiguration:
+        BucketARN: !GetAtt LogBucket.Arn
+        RoleARN: !GetAtt LogFirehoseRole.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 5
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-logs"
+      LifecycleConfiguration:
+        Rules:
+          - Id: AutoDelete
+            Status: Enabled
+            ExpirationInDays: 90  # 保存期間を設定
+
+  LogsToFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: logs.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LogsToFirehosePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - firehose:PutRecord
+                  - firehose:PutRecordBatch
+                Resource: !GetAtt LogFirehose.Arn
+
+  LogSubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      LogGroupName: !Ref FastAPIFunctionLogGroup
+      FilterPattern: ""
+      DestinationArn: !GetAtt LogFirehose.Arn
+      RoleArn: !GetAtt LogsToFirehoseRole.Arn
 
 Outputs:
   FastAPIURL:
