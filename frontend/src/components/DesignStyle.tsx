@@ -53,5 +53,5 @@ export function StyleSelector({
         ))}
       </div>
     </div>
-
+  );
 }
