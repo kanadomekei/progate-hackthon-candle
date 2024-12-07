@@ -7,7 +7,25 @@ interface StyleSelectorProps {
   onStyleSelect: (styles: DesignStyle[]) => void;
 }
 
-const DESIGN_STYLES = ["Minimal", "Art", "Illustration", "イラスト"];
+const DESIGN_STYLES = [
+  "3d-model",
+  "analog-film",
+  "animé",
+  "cinematic",
+  "comic-book",
+  "digital-art",
+  "enhance",
+  "fantasy-art",
+  "isometric",
+  "line-art",
+  "low-poly",
+  "modeling-compound",
+  "neon-punk",
+  "origami",
+  "photographic",
+  "pixel-art",
+  "tile-texture"
+];
 
 export function StyleSelector({
   selectedStyles,
@@ -33,7 +51,7 @@ export function StyleSelector({
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-xl font-semibold mb-4">デザインスタイル</h2>
 
-      <div className="space-y-3">
+      <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
         {DESIGN_STYLES.map((style) => (
           <button
             key={style}
