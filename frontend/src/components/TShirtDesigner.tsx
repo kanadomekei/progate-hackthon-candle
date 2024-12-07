@@ -7,7 +7,6 @@ import { ColorPalette } from "./ColorPalette";
 import { StyleSelector } from "./DesignStyle";
 import { DesignPreview } from "./DesignPreview";
 import { NegativePromptSection } from "./NegativePronpt";
-import Image from "next/image";
 
 export type DesignStyle = string;
 export type ColorScheme = { selectedColor: string };
@@ -17,6 +16,7 @@ export function TShirtDesigner() {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const baseURL =
@@ -44,7 +44,7 @@ export function TShirtDesigner() {
 
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
-      setGeneratedImageUrls(prev => [...prev, imageUrl]);
+      setGeneratedImageUrls((prev) => [...prev, imageUrl]);
     } catch (error) {
       console.error("エラーが発生しました:", error);
       alert("画像の生成に失敗しました");
@@ -94,7 +94,11 @@ export function TShirtDesigner() {
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Generated Designs</h2>
-            <DesignPreview generatedImage={generatedImageUrls} />
+            <DesignPreview
+              generatedImage={generatedImageUrls}
+              selectedImage={selectedImage}
+              onImageSelect={setSelectedImage}
+            />
           </div>
         </div>
       </div>
