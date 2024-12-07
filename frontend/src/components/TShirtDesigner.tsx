@@ -11,12 +11,16 @@ export type ThemeColor = {
   prompt: string;
 };
 
+// モデルタイプの型定義を追加
+type ModelType = 'nova' | 'stable-diffusion';
+
 export function TShirtDesigner() {
   const [selectedThemeColor, setSelectedThemeColor] =
     useState<ThemeColor | null>(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<ModelType>('stable-diffusion');
 
   const [isLoading, setIsLoading] = useState(false);
   const baseURL =
@@ -26,18 +30,20 @@ export function TShirtDesigner() {
   const generateImage = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `${baseURL}/generate-image-stable-diffusion`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt,
-          }),
+      // エンドポイントをモデルに基づいて決���
+      const endpoint = selectedModel === 'nova' 
+        ? `${baseURL}/generate-image-stable-diffusion`
+        : `${baseURL}/generate-image-stable-diffusion`;
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          prompt,
+        }),
+      });
       if (!response.ok) {
         throw new Error("画像の生成に失敗しました");
       }
@@ -46,7 +52,7 @@ export function TShirtDesigner() {
       const imageUrl = URL.createObjectURL(blob);
       setGeneratedImageUrls((prev) => [...prev, imageUrl]);
     } catch (error) {
-      console.error("エラ��が発生しました:", error);
+      console.error("エラーが発生しました:", error);
       alert("画像の生成に失敗しました");
     } finally {
       setIsLoading(false);
@@ -66,6 +72,31 @@ export function TShirtDesigner() {
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-7 space-y-6">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">モデルを選択</h3>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="stable-diffusion"
+                  checked={selectedModel === 'stable-diffusion'}
+                  onChange={(e) => setSelectedModel(e.target.value as ModelType)}
+                  className="mr-2"
+                />
+                Stable Diffusion
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  value="nova"
+                  checked={selectedModel === 'nova'}
+                  onChange={(e) => setSelectedModel(e.target.value as ModelType)}
+                  className="mr-2"
+                />
+                Nova
+              </label>
+            </div>
+          </div>
           <div className="bg-white rounded-lg shadow-lg p-6">
             <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
           </div>
