@@ -12,7 +12,6 @@ export type ColorScheme = {selectedColor: string;};
 
 
 export function TShirtDesigner() {
-  const [isGenerating, setIsGenerating] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
   const [generatedImageUrls] = useState<string[]>([]);
   const [negativePrompt, setNegativePrompt] = useState("");
@@ -40,10 +39,9 @@ export function TShirtDesigner() {
             {/* デザイン生成ボタン */}
             <div className="bg-white rounded-lg shadow-lg p-6">
             <button
-              disabled={isGenerating}
-              className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:bg-blue-400"
+              className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium"
             >
-              {isGenerating ? "create design..." : "create design"}
+              create design
             </button>
           </div>
           <div className="grid grid-cols-2 gap-6">
