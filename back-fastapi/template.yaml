@@ -16,13 +16,14 @@ Resources:
     Properties:
       PackageType: Image
       MemorySize: 512
-      Policies:
-        - Statement:
-            - Effect: Allow
-              Action:
-                - bedrock:InvokeModel
-                - translate:TranslateText
-              Resource: "*"
+      # Policies:
+      #   - Statement:
+      #       - Effect: Allow
+      #         Action:
+      #           - bedrock:InvokeModel
+      #           - translate:TranslateText
+      #         Resource: "*"
+      Role: arn:aws:iam::535049764526:role/progate
       LoggingConfig:
         LogFormat: JSON
         LogGroup: !Sub "/aws/lambda/${AWS::StackName}-FastAPIFunction"
@@ -86,9 +87,6 @@ Outputs:
   FastAPIFunction:
     Description: "FastAPI Lambda Function ARN"
     Value: !GetAtt FastAPIFunction.Arn
-  FastAPIIamRole:
-    Description: "Implicit IAM Role created for FastAPI function"
-    Value: !GetAtt FastAPIFunctionRole.Arn
   CloudFrontUrl:
     Description: "CloudFront URL"
     Value: !GetAtt CloudFrontDistribution.DomainName
