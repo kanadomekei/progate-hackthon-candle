@@ -2,20 +2,16 @@
 
 import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
-
 import { ThemeColorSelector } from "./ThemeColorSelector";
-import { StyleSelector } from "./DesignStyle";
 import { DesignPreview } from "./DesignPreview";
 import { NegativePromptSection } from "./NegativePronpt";
 
-export type DesignStyle = string;
 export type ThemeColor = {
   name: string;
   prompt: string;
 };
 
 export function TShirtDesigner() {
-  const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
   const [selectedThemeColor, setSelectedThemeColor] = useState<ThemeColor | null>(null);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
@@ -69,7 +65,6 @@ export function TShirtDesigner() {
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-12 gap-8">
-        {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
@@ -82,26 +77,17 @@ export function TShirtDesigner() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <ThemeColorSelector
-                selectedThemeColor={selectedThemeColor}
-                onThemeColorSelect={(color) => {
-                  setSelectedThemeColor(color);
-                  if (color) {
-                    updatePrompt(prompt);
-                  }
-                }}
-              />
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <StyleSelector
-                selectedStyles={selectedStyles}
-                onStyleSelect={setSelectedStyles}
-              />
-            </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <ThemeColorSelector
+              selectedThemeColor={selectedThemeColor}
+              onThemeColorSelect={(color) => {
+                setSelectedThemeColor(color);
+                if (color) {
+                  updatePrompt(prompt);
+                }
+              }}
+            />
           </div>
-          {/* デザイン生成ボタン */}
           <button
             onClick={generateImage}
             disabled={isLoading}
@@ -111,7 +97,6 @@ export function TShirtDesigner() {
           </button>
         </div>
 
-        {/* 右側: プレビューを画像一覧表示に変更 */}
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Generated Designs</h2>
