@@ -10,35 +10,35 @@ interface ThemeColorSelectorProps {
 const THEME_COLORS: ThemeColor[] = [
   {
     name: "Monochrome",
-    prompt: "monochrome color scheme, black and white tones, grayscale design",
+    prompt: "create a minimalist design using only black, white, and grayscale tones. Focus on clean lines and geometric shapes",
   },
   {
     name: "Pastel",
-    prompt: "soft pastel colors, gentle and soothing color palette, light and airy tones",
+    prompt: "design with soft, light pastel colors that create a gentle and dreamy atmosphere. Include rounded shapes and flowing elements",
   },
   {
     name: "Vivid",
-    prompt: "vibrant and bold colors, high saturation, energetic color scheme",
+    prompt: "create an eye-catching design with bold, saturated colors. Incorporate dynamic patterns and striking contrasts",
   },
   {
     name: "Earth Tones",
-    prompt: "earth tones, natural colors, warm browns, sage greens, terracotta, organic palette",
+    prompt: "design using warm, natural earth-inspired colors. Include organic shapes and textures that reflect nature",
   },
   {
     name: "Neon",
-    prompt: "neon colors, bright fluorescent tones, electric color palette, glowing effect",
+    prompt: "create a modern, urban design with bright neon colors. Include bold typography and contemporary graphic elements",
   },
   {
     name: "Vintage",
-    prompt: "vintage color palette, muted and faded tones, retro color scheme, aged appearance",
+    prompt: "design with a nostalgic feel using faded, muted colors. Include retro typography and classic design elements from the past",
   },
   {
     name: "Coastal",
-    prompt: "coastal colors, ocean blues, sandy beiges, seafoam greens, beach inspired palette",
+    prompt: "create a relaxed, beach-inspired design using ocean blues and sandy neutrals. Include wave-like patterns and coastal motifs",
   },
   {
     name: "Forest",
-    prompt: "forest colors, deep emerald greens, rich browns, woodland color palette, natural dark tones",
+    prompt: "design using deep forest greens and rich natural tones. Include botanical elements and woodland-inspired patterns",
   }
 ];
 
