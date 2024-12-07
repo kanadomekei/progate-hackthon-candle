@@ -15,6 +15,8 @@ export function TShirtDesigner() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
   const [generatedImageUrls] = useState<string[]>([]);
+  const [negativePrompt, setNegativePrompt] = useState("");
+  const [prompt, setPrompt] = useState("");
 
   return (
     <div className="container mx-auto p-6">
@@ -22,11 +24,17 @@ export function TShirtDesigner() {
         {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <PromptSection/>
+            <PromptSection
+              prompt={prompt}
+              setPrompt={setPrompt}
+            />
           </div>
           <div>
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <NegativePromptSection/>
+              <NegativePromptSection 
+                negativePrompt={negativePrompt}
+                setNegativePrompt={setNegativePrompt}
+              />
             </div>
           </div>
             {/* デザイン生成ボタン */}

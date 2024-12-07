@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { DesignStyle } from "./TShirtDesigner";
 
 interface StyleSelectorProps {
