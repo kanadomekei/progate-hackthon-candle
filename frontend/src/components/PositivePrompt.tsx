@@ -5,7 +5,7 @@ interface PromptSectionProps {
   setPrompt: (prompt: string) => void;
 }
 
-export function PromptSection({ prompt, setPrompt }: PromptSectionProps) {
+export function PositivePrompt({ prompt, setPrompt }: PromptSectionProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Design Prompt</h2>

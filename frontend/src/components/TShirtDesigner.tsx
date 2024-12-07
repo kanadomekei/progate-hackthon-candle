@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { PromptSection } from "./PromptSection";
+import { PositivePrompt } from "./PositivePrompt";
 import { NegativePromptSection } from "./NegativePronpt";
 import { ColorPalette } from "./ColorPalette";
-import { StyleSelector } from "./StyleSelector";
-import { TShirtPreview } from "./TShirtPreview";
+import { StyleSelector } from "./DesignStyle";
+import { DesignPreview } from "./DesignPreview";
 
 export type DesignStyle = string;
 export type ColorScheme = { selectedColor: string };
@@ -22,7 +22,7 @@ export function TShirtDesigner() {
         {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <PromptSection prompt={prompt} setPrompt={setPrompt} />
+            <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
           </div>
           <div>
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -55,7 +55,7 @@ export function TShirtDesigner() {
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
-            <TShirtPreview generatedImage={generatedImageUrls} />
+            <DesignPreview generatedImage={generatedImageUrls} />
           </div>
         </div>
       </div>

@@ -3,19 +3,19 @@
 import { useState } from "react";
 import Image from "next/image";
 
-interface TShirtPreviewProps {
+interface DesignPreviewProps {
   generatedImage: string[];
 }
 
-export function TShirtPreview({ generatedImage }: TShirtPreviewProps) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // 選択された画像を管理するステート
+export function DesignPreview({ generatedImage }: DesignPreviewProps) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageClick = (url: string) => {
-    setSelectedImage(url); // クリックされた画像を設定
+    setSelectedImage(url);
   };
 
   const closeModal = () => {
-    setSelectedImage(null); // モーダルを閉じる
+    setSelectedImage(null);
   };
 
   return (
@@ -30,7 +30,7 @@ export function TShirtPreview({ generatedImage }: TShirtPreviewProps) {
               width={200}
               height={200}
               className="w-full h-auto rounded-lg cursor-pointer"
-              onClick={() => handleImageClick(url)} // 画像クリック時のイベント
+              onClick={() => handleImageClick(url)}
             />
           ))}
         </div>
