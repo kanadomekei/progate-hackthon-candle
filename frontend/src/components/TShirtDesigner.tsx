@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
 import { ThemeColorSelector } from "./ThemeColorSelector";
 import { DesignPreview } from "./DesignPreview";
+import { SamplePrompt } from "./SamplePrompt";
 
 export type ThemeColor = {
   name: string;
@@ -44,7 +45,7 @@ export function TShirtDesigner() {
       const imageUrl = URL.createObjectURL(blob);
       setGeneratedImageUrls((prev) => [...prev, imageUrl]);
     } catch (error) {
-      console.error("エラーが発生しました:", error);
+      console.error("エラ��が発生しました:", error);
       alert("画像の生成に失敗しました");
     } finally {
       setIsLoading(false);
@@ -66,6 +67,9 @@ export function TShirtDesigner() {
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
+          </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <SamplePrompt onPromptSelect={setPrompt} />
           </div>
           <div className="bg-white rounded-lg shadow-lg p-6">
             <ThemeColorSelector
