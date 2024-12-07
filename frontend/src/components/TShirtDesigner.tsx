@@ -2,23 +2,22 @@
 
 import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
-
-import { ColorPalette } from "./ColorPalette";
-import { StyleSelector } from "./DesignStyle";
+import { ThemeColorSelector } from "./ThemeColorSelector";
 import { DesignPreview } from "./DesignPreview";
-import { NegativePromptSection } from "./NegativePronpt";
-import Image from "next/image";
+import { SamplePrompt } from "./SamplePrompt";
 
-export type DesignStyle = string;
-export type ColorScheme = { selectedColor: string };
+export type ThemeColor = {
+  name: string;
+  prompt: string;
+};
 
 export function TShirtDesigner() {
-  const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
-  const [negativePrompt, setNegativePrompt] = useState("");
+  const [selectedThemeColor, setSelectedThemeColor] =
+    useState<ThemeColor | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [generatedImageUrls] = useState<string[]>([]);
+  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const baseURL =
     process.env.NEXT_PUBLIC_API_URL ||
@@ -43,46 +42,47 @@ export function TShirtDesigner() {
         throw new Error("画像の生成に失敗しました");
       }
 
-      // レスポンスをBlobとして取得
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
-      setImageUrl(imageUrl);
+      setGeneratedImageUrls((prev) => [...prev, imageUrl]);
     } catch (error) {
-      console.error("エラーが発生しました:", error);
+      console.error("エラ��が発生しました:", error);
       alert("画像の生成に失敗しました");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // プロンプトを更新する関数
+  const updatePrompt = (newPrompt: string) => {
+    let finalPrompt = newPrompt;
+    if (selectedThemeColor) {
+      finalPrompt = `${newPrompt}, ${selectedThemeColor.prompt}`;
+    }
+    setPrompt(finalPrompt);
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-12 gap-8">
-        {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
             <PositivePrompt prompt={prompt} setPrompt={setPrompt} />
           </div>
-          <div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <NegativePromptSection
-                negativePrompt={negativePrompt}
-                setNegativePrompt={setNegativePrompt}
-              />
-            </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <SamplePrompt onPromptSelect={setPrompt} />
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <ColorPalette />
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <StyleSelector
-                selectedStyles={selectedStyles}
-                onStyleSelect={setSelectedStyles}
-              />
-            </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <ThemeColorSelector
+              selectedThemeColor={selectedThemeColor}
+              onThemeColorSelect={(color) => {
+                setSelectedThemeColor(color);
+                if (color) {
+                  updatePrompt(prompt);
+                }
+              }}
+            />
           </div>
-          {/* デザイン生成ボタン */}
           <button
             onClick={generateImage}
             disabled={isLoading}
@@ -92,27 +92,14 @@ export function TShirtDesigner() {
           </button>
         </div>
 
-        {/* 右側: Tシャツプレビュー */}
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
-            <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
-            <div className="flex justify-center">
-              {imageUrl && (
-                <div className="mt-4 flex justify-center">
-                  <Image
-                    src={imageUrl}
-                    alt="Generated"
-                    width={300}
-                    height={300}
-                    style={{ maxWidth: "300px", height: "auto" }}
-                    unoptimized
-                  />
-                </div>
-              )}
-              <div className="w-full max-w-md">
-                <DesignPreview generatedImage={generatedImageUrls} />
-              </div>
-            </div>
+            <h2 className="text-xl font-semibold mb-6">Generated Designs</h2>
+            <DesignPreview
+              generatedImage={generatedImageUrls}
+              selectedImage={selectedImage}
+              onImageSelect={setSelectedImage}
+            />
           </div>
         </div>
       </div>
