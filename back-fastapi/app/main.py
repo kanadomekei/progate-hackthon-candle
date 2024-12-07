@@ -121,11 +121,16 @@ async def generate_image_to_image(prompt: str, file: UploadFile = File(...), sty
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to process uploaded image: {e}")
 
-    body = json.dumps({
+        
+    body = {
         "text_prompts": [{"text": prompt}],
         "init_image": init_image,
-        "style_preset": style
-    })
+    }
+    
+    if style:
+        body["style_preset"] = style
+        
+    body = json.dumps(body)
 
     try:
         response = bedrock_runtime.invoke_model(
