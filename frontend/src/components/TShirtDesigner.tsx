@@ -3,16 +3,20 @@
 import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
 
-import { ColorPalette } from "./ColorPalette";
+import { ThemeColorSelector } from "./ThemeColorSelector";
 import { StyleSelector } from "./DesignStyle";
 import { DesignPreview } from "./DesignPreview";
 import { NegativePromptSection } from "./NegativePronpt";
 
 export type DesignStyle = string;
-export type ColorScheme = { selectedColor: string };
+export type ThemeColor = {
+  name: string;
+  prompt: string;
+};
 
 export function TShirtDesigner() {
   const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
+  const [selectedThemeColor, setSelectedThemeColor] = useState<ThemeColor | null>(null);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
@@ -53,6 +57,15 @@ export function TShirtDesigner() {
     }
   };
 
+  // プロンプトを更新する関数
+  const updatePrompt = (newPrompt: string) => {
+    let finalPrompt = newPrompt;
+    if (selectedThemeColor) {
+      finalPrompt = `${newPrompt}, ${selectedThemeColor.prompt}`;
+    }
+    setPrompt(finalPrompt);
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="grid grid-cols-12 gap-8">
@@ -71,7 +84,15 @@ export function TShirtDesigner() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <ColorPalette />
+              <ThemeColorSelector
+                selectedThemeColor={selectedThemeColor}
+                onThemeColorSelect={(color) => {
+                  setSelectedThemeColor(color);
+                  if (color) {
+                    updatePrompt(prompt);
+                  }
+                }}
+              />
             </div>
             <div className="bg-white rounded-lg shadow-lg p-6">
               <StyleSelector

@@ -1,27 +1,29 @@
 "use client";
 
-interface PromptSectionProps {
+interface PositivePromptProps {
   prompt: string;
   setPrompt: (prompt: string) => void;
+  onPromptChange?: (prompt: string) => void;
 }
 
-export function PositivePrompt({ prompt, setPrompt }: PromptSectionProps) {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Design Prompt</h2>
+export function PositivePrompt({ prompt, setPrompt, onPromptChange }: PositivePromptProps) {
+  const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newPrompt = e.target.value;
+    setPrompt(newPrompt);
+    if (onPromptChange) {
+      onPromptChange(newPrompt);
+    }
+  };
 
-      <div className="space-y-4">
-        <div>
-          <textarea
-            id="prompt"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="デザインのアイデアを書いてね"
-          />
-        </div>
-      </div>
+  return (
+    <div>
+      <h2 className="text-xl font-semibold mb-4">プロンプト</h2>
+      <textarea
+        value={prompt}
+        onChange={handlePromptChange}
+        className="w-full h-32 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Tシャツのデザインを説明してください..."
+      />
     </div>
   );
 }
