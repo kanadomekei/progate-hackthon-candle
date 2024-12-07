@@ -7,7 +7,8 @@ interface SamplePromptProps {
 const SAMPLE_PROMPTS = [
   {
     name: "Minimalist Logo",
-    prompt: "シンプルで洗練された直線と基本的な図形を使用したミニマリストなロゴデザイン",
+    prompt:
+      "シンプルで洗練された直線と基本的な図形を使用したミニマリストなロゴデザイン",
   },
   {
     name: "Abstract Art",
@@ -15,11 +16,13 @@ const SAMPLE_PROMPTS = [
   },
   {
     name: "Cute Character",
-    prompt: "かわいらしい表情と丸みのある形状を持つカワイイスタイルのキャラクターデザイン",
+    prompt:
+      "かわいらしい表情と丸みのある形状を持つカワイイスタイルのキャラクターデザイン",
   },
   {
     name: "Typography",
-    prompt: "スタイリッシュでクリエイティブな文字デザイン、装飾的なタイポグラフィ",
+    prompt:
+      "スタイリッシュでクリエイティブな文字デザイン、装飾的なタイポグラフィ",
   },
   {
     name: "Nature Motif",
@@ -55,4 +58,4 @@ export function SamplePrompt({ onPromptSelect }: SamplePromptProps) {
       </div>
     </div>
   );
-} 
+}

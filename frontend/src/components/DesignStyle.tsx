@@ -24,7 +24,7 @@ const DESIGN_STYLES = [
   "origami",
   "photographic",
   "pixel-art",
-  "tile-texture"
+  "tile-texture",
 ];
 
 export function StyleSelector({

@@ -12,7 +12,8 @@ export type ThemeColor = {
 };
 
 export function TShirtDesigner() {
-  const [selectedThemeColor, setSelectedThemeColor] = useState<ThemeColor | null>(null);
+  const [selectedThemeColor, setSelectedThemeColor] =
+    useState<ThemeColor | null>(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

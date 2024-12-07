@@ -6,7 +6,11 @@ interface PositivePromptProps {
   onPromptChange?: (prompt: string) => void;
 }
 
-export function PositivePrompt({ prompt, setPrompt, onPromptChange }: PositivePromptProps) {
+export function PositivePrompt({
+  prompt,
+  setPrompt,
+  onPromptChange,
+}: PositivePromptProps) {
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newPrompt = e.target.value;
     setPrompt(newPrompt);
