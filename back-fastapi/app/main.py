@@ -12,6 +12,7 @@ import re
 import base64
 import logging
 from pydantic import BaseModel
+from typing import Optional, Union
 
 # 環境設定
 load_dotenv()
@@ -100,7 +101,7 @@ def resize_to_64_multiple(image_data: bytes) -> bytes:
 
 # 画像生成（image-to-image）エンドポイント
 @app.post("/generate-image-to-image-stable-diffusion")
-async def generate_image_to_image(prompt: str, file: UploadFile = File(...)):
+async def generate_image_to_image(prompt: str, file: UploadFile = File(...), style: str = None):
     if translate_en(prompt):
         try:
             translate_client = boto3.client('translate', region_name=REGION)
@@ -123,7 +124,7 @@ async def generate_image_to_image(prompt: str, file: UploadFile = File(...)):
     body = json.dumps({
         "text_prompts": [{"text": prompt}],
         "init_image": init_image,
-        "style_preset": "isometric"
+        "style_preset": style
     })
 
     try:
@@ -142,3 +143,4 @@ async def generate_image_to_image(prompt: str, file: UploadFile = File(...)):
         return decode_and_stream_response({"images": [base64_image]})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
