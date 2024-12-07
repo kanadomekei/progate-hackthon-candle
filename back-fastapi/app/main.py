@@ -117,43 +117,6 @@ async def generate_image_stable_diffusion(request_body: ImageGenerationRequest):
         raise HTTPException(
             status_code=500, detail=f"Image generation failed: {str(e)}"
         )
-
-
-@app.post("/generate-image-nova-canvas")
-async def generate_image_nova_canvas(request_body: ImageGenerationRequest):
-    if translate_en(request_body.prompt):
-        async with httpx.AsyncClient() as client:
-            translate_response = await client.post(
-                "http://127.0.0.1:8000/translate-jp-to-en", 
-                json={"text": request_body.prompt}
-            )
-        translated_text = translate_response.text
-        request_body.prompt = translated_text
-        print(f"print: {request_body}")
-        print(f"print: {request_body.prompt}")
-    body = {
-        "taskType": "TEXT_IMAGE",
-        "textToImageParams": {"text": request_body.prompt},
-        "imageGenerationConfig": {
-            "width": 1024,
-            "height": 1024,
-            "quality": "standard",
-            "numberOfImages": 3,
-        },
-    }
-    try:
-        nova_canvas_client = ImageGenerator.create_bedrock_client("us-east-1")
-        response = nova_canvas_client.invoke_model(
-            modelId="amazon.nova-canvas-v1:0", body=json.dumps(body)
-        )
-        model_response = json.loads(response["body"].read())
-        return ImageGenerator.decode_and_stream_response(model_response)
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Image generation failed: {str(e)}"
-        )
-
-# ここから画像修正
 class ImageError(Exception):
     "Custom exception for errors returned by SDXL"
     def __init__(self, message):
