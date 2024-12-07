@@ -5,9 +5,9 @@ interface NegativePromptSectionProps {
   setNegativePrompt: (value: string) => void;
 }
 
-export function NegativePromptSection({ 
-  negativePrompt, 
-  setNegativePrompt 
+export function NegativePromptSection({
+  negativePrompt,
+  setNegativePrompt,
 }: NegativePromptSectionProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">

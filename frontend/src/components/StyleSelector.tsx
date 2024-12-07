@@ -7,12 +7,7 @@ interface StyleSelectorProps {
   onStyleSelect: (styles: DesignStyle[]) => void;
 }
 
-const DESIGN_STYLES = [
-  "Minimal",
-  "Art",
-  "Illustration",
-  "イラスト"
-];
+const DESIGN_STYLES = ["Minimal", "Art", "Illustration", "イラスト"];
 
 export function StyleSelector({
   selectedStyles,

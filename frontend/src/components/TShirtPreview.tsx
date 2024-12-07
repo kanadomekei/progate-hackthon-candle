@@ -35,7 +35,7 @@ export function TShirtPreview({ generatedImage }: TShirtPreviewProps) {
           ))}
         </div>
       ) : (
-          <p className="text-gray-500">まだ画像が生成されていません</p>
+        <p className="text-gray-500">まだ画像が生成されていません</p>
       )}
 
       {/* モーダルウィンドウ */}
@@ -45,9 +45,7 @@ export function TShirtPreview({ generatedImage }: TShirtPreviewProps) {
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
               onClick={closeModal}
-            >
-              
-            </button>
+            ></button>
             <Image
               src={selectedImage}
               alt="Selected T-shirt design"

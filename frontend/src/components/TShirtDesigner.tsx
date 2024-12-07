@@ -7,9 +7,8 @@ import { ColorPalette } from "./ColorPalette";
 import { StyleSelector } from "./StyleSelector";
 import { TShirtPreview } from "./TShirtPreview";
 
-export type DesignStyle = string
-export type ColorScheme = {selectedColor: string;};
-
+export type DesignStyle = string;
+export type ColorScheme = { selectedColor: string };
 
 export function TShirtDesigner() {
   const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
@@ -23,35 +22,31 @@ export function TShirtDesigner() {
         {/* 左側: プロンプト、その下にカラーパレットとスタイルセレクター */}
         <div className="col-span-7 space-y-6">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <PromptSection
-              prompt={prompt}
-              setPrompt={setPrompt}
-            />
+            <PromptSection prompt={prompt} setPrompt={setPrompt} />
           </div>
           <div>
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <NegativePromptSection 
+              <NegativePromptSection
                 negativePrompt={negativePrompt}
                 setNegativePrompt={setNegativePrompt}
               />
             </div>
           </div>
-            {/* デザイン生成ボタン */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-            <button
-              className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium"
-            >
+          {/* デザイン生成ボタン */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <button className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium">
               create design
             </button>
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <ColorPalette/>
+              <ColorPalette />
             </div>
             <div className="bg-white rounded-lg shadow-lg p-6">
               <StyleSelector
                 selectedStyles={selectedStyles}
-                onStyleSelect={setSelectedStyles}/>
+                onStyleSelect={setSelectedStyles}
+              />
             </div>
           </div>
         </div>
