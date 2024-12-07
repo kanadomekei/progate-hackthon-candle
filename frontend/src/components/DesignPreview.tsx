@@ -20,6 +20,13 @@ export function DesignPreview({
     return null;
   }
 
+  const handleCropClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedImage) {
+      router.push(`/crop?image=${encodeURIComponent(selectedImage)}`);
+    }
+  };
+
   return (
     <div className="bg-gray-50 rounded-lg p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -56,10 +63,7 @@ export function DesignPreview({
             <div className="mt-4 flex justify-center">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push('/crop');
-                }}
+                onClick={handleCropClick}
               >
                 服の型に切り取る
               </button>
