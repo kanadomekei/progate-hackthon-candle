@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 
-export function PromptSection() {
-  const [Prompt, setPrompt] = useState("");
-
+export function NegativePromptSection() {
+  const [NegativePrompt, setNegativePrompt] = useState("");
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Design Prompt</h2>
+      <h2 className="text-xl font-semibold mb-4">Negative Prompt</h2>
 
       <div className="space-y-4">
         <div>
@@ -15,9 +14,9 @@ export function PromptSection() {
             id="prompt"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={4}
-            value={Prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="デザインのアイデアを書いてね"
+            value={NegativePrompt}
+            onChange={(e) => setNegativePrompt(e.target.value)}
+            placeholder="削除したい内容を書いてね❤️"
           />
         </div>
       </div>
