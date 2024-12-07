@@ -2,8 +2,9 @@
 
 import { ImageCrop } from "@/components/crop/ImageCrop";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function CropPage() {
+function CropContent() {
   const searchParams = useSearchParams();
   const imageUrl = searchParams.get("image");
 
@@ -12,4 +13,12 @@ export default function CropPage() {
   }
 
   return <ImageCrop imagePath={imageUrl} />;
+}
+
+export default function CropPage() {
+  return (
+    <Suspense fallback={<div>読み込み中...</div>}>
+      <CropContent />
+    </Suspense>
+  );
 }
