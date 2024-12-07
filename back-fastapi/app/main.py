@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from fastapi.responses import StreamingResponse
@@ -60,7 +60,6 @@ class ImageGenerationRequest(BaseModel):
 
 class ImageGenerationRequestitoi(BaseModel):
     prompt: str
-    image_url: str
 
 
 # 日本語判別
@@ -189,16 +188,19 @@ def generate_image(model_Id, body):
 model_Id = 'stability.stable-diffusion-xl-v1'
 # stable-diffusionで画像修正
 @app.post("/generate-image-to-image-stable-diffusion")
-async def generate_image_stable_diffusion(request_body: ImageGenerationRequestitoi):
-    if translate_en(request_body.prompt):
+async def generate_image_stable_diffusion(
+    prompt: str,
+    file: UploadFile = File(...)
+):
+    if translate_en(prompt):
         try:
             translate_client = boto3.client('translate', region_name=REGION)
             response = translate_client.translate_text(
-                Text=request_body.prompt,
+                Text=prompt,
                 SourceLanguageCode='ja',
                 TargetLanguageCode='en'
             )
-            request_body.prompt = response['TranslatedText']
+            prompt = response['TranslatedText']
         except Exception as e:
             raise HTTPException(
                 status_code=500, 
@@ -206,14 +208,15 @@ async def generate_image_stable_diffusion(request_body: ImageGenerationRequestit
             )
 
     try:
-        response = requests.get(request_body.image_url)
-        response.raise_for_status()
-        init_image = base64.b64encode(response.content).decode('utf8')
-    except requests.RequestException as e:
-        raise HTTPException(status_code=400, detail=f"Failed to fetch image: {e}")
+        image_content = await file.read()
+        # 画像をリサイズ
+        resized_image_content = resize_to_64_multiple(image_content)
+        init_image = base64.b64encode(resized_image_content).decode('utf8')
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to process uploaded image: {e}")
 
     body = json.dumps({
-        "text_prompts": [{"text": request_body.prompt}],
+        "text_prompts": [{"text": prompt}],
         "init_image": init_image,
         "style_preset": "isometric"
     })
@@ -228,3 +231,23 @@ async def generate_image_stable_diffusion(request_body: ImageGenerationRequestit
     except ImageError as err:
         logger.error(err.message)
         raise HTTPException(status_code=500, detail=err.message)
+
+def resize_to_64_multiple(image_data: bytes) -> bytes:
+    """画像を64の倍数のサイズにリサイズする"""
+    # バイトデータからPIL Imageを作成
+    image = Image.open(io.BytesIO(image_data))
+    
+    # 元のサイズを取得
+    width, height = image.size
+    
+    # 64の倍数に調整
+    new_width = ((width + 63) // 64) * 64
+    new_height = ((height + 63) // 64) * 64
+    
+    # リサイズ
+    resized_image = image.resize((new_width, new_height))
+    
+    # バイトデータに変換
+    buffer = io.BytesIO()
+    resized_image.save(buffer, format="PNG")
+    return buffer.getvalue()
