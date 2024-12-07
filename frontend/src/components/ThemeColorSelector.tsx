@@ -10,35 +10,35 @@ interface ThemeColorSelectorProps {
 const THEME_COLORS: ThemeColor[] = [
   {
     name: "Monochrome",
-    prompt: "create a minimalist design using only black, white, and grayscale tones. Focus on clean lines and geometric shapes",
+    prompt: "黒、白、グレースケールのみを使用したミニマリストデザインを作成してください。クリーンなラインと幾何学的な形状に重点を置いてください",
   },
   {
     name: "Pastel",
-    prompt: "design with soft, light pastel colors that create a gentle and dreamy atmosphere. Include rounded shapes and flowing elements",
+    prompt: "優しく夢のような雰囲気を作り出す、柔らかいパステルカラーでデザインしてください。丸みを帯びた形状と流れるような要素を含めてください",
   },
   {
     name: "Vivid",
-    prompt: "create an eye-catching design with bold, saturated colors. Incorporate dynamic patterns and striking contrasts",
+    prompt: "鮮やかな彩度の高い色を使用して目を引くデザインを作成してください。ダイナミックなパターンと印象的なコントラストを取り入れてください",
   },
   {
     name: "Earth Tones",
-    prompt: "design using warm, natural earth-inspired colors. Include organic shapes and textures that reflect nature",
+    prompt: "暖かみのある自然な大地の色を使用してデザインしてください。自然を反映した有機的な形状とテクスチャを含めてください",
   },
   {
     name: "Neon",
-    prompt: "create a modern, urban design with bright neon colors. Include bold typography and contemporary graphic elements",
+    prompt: "明るいネオンカラーを使用したモダンでアーバンなデザインを作成してください。大胆なタイポグラフィと現代的なグラフィック要素を含めてください",
   },
   {
     name: "Vintage",
-    prompt: "design with a nostalgic feel using faded, muted colors. Include retro typography and classic design elements from the past",
+    prompt: "色あせた落ち着いた色を使用してノスタルジックな雰囲気のデザインを作成してください。レトロなタイポグラフィと昔ながらのデザイン要素を含めてください",
   },
   {
     name: "Coastal",
-    prompt: "create a relaxed, beach-inspired design using ocean blues and sandy neutrals. Include wave-like patterns and coastal motifs",
+    prompt: "オーシャンブルーと砂浜のような中間色を使用してリラックスした海辺をイメージしたデザインを作成してください。波のようなパターンと海辺のモチーフを含めてください",
   },
   {
     name: "Forest",
-    prompt: "design using deep forest greens and rich natural tones. Include botanical elements and woodland-inspired patterns",
+    prompt: "深い森の緑と豊かな自然の色調を使用してデザインしてください。植物の要素と森林をイメージしたパターンを含めてください",
   }
 ];
 
