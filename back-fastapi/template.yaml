@@ -60,9 +60,13 @@ Resources:
           TargetOriginId: ApiGatewayOrigin
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods: 
+            - DELETE
             - GET
             - HEAD
             - OPTIONS
+            - PATCH
+            - POST
+            - PUT
           CachedMethods: 
             - GET
             - HEAD
