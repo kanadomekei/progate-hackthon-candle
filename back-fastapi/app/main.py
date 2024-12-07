@@ -164,16 +164,3 @@ async def translate_jp_to_en(request_body: TranslationRequest):
         )
     
 
-def translate_jp_en(request_body: TranslationRequest):
-    translate_client = boto3.client('translate', region_name=REGION)
-    try:
-        response = translate_client.translate_text(
-            Text=request_body.text,
-            SourceLanguageCode='ja',
-            TargetLanguageCode='en'
-        )
-        return response.get('TranslatedText')
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Translation failed: {str(e)}"
-        )
