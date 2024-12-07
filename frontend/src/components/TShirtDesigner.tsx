@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { PositivePrompt } from "./PositivePrompt";
+
 import { ColorPalette } from "./ColorPalette";
 import { StyleSelector } from "./DesignStyle";
 import { DesignPreview } from "./DesignPreview";
 import { NegativePromptSection } from "./NegativePronpt";
-
 
 export type DesignStyle = string;
 export type ColorScheme = { selectedColor: string };
@@ -16,6 +16,7 @@ export function TShirtDesigner() {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls] = useState<string[]>([]);
+
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://w35iey431a.execute-api.us-west-2.amazonaws.com';

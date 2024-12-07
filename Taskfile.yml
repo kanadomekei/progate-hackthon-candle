@@ -4,7 +4,7 @@ tasks:
   docker:up:
     desc: "Starts all Docker services in detached mode"
     cmds:
-      - cd frontend && npm install && cd .. && docker-compose up -d
+      - cd frontend && npm install --legacy-peer-deps && cd .. && docker-compose up -d
 
   docker:down:
     desc: "Stops all Docker services"
@@ -14,7 +14,7 @@ tasks:
   docker:up-frontend:
     desc: "Starts only the frontend Docker service in detached mode"
     cmds:
-      - d frontend && npm install && cd .. && docker-compose up frontend -d
+      - cd frontend && npm install --legacy-peer-deps && cd .. && docker-compose up frontend -d
 
   docker:up-backend:
     desc: "Starts only the backend Docker service in detached mode"
