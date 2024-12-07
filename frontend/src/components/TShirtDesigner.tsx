@@ -16,9 +16,8 @@ export function TShirtDesigner() {
   const [selectedStyles, setSelectedStyles] = useState<DesignStyle[]>([]);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [generatedImageUrls] = useState<string[]>([]);
+  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
 
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const baseURL =
     process.env.NEXT_PUBLIC_API_URL ||
@@ -43,10 +42,9 @@ export function TShirtDesigner() {
         throw new Error("画像の生成に失敗しました");
       }
 
-      // レスポンスをBlobとして取得
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
-      setImageUrl(imageUrl);
+      setGeneratedImageUrls(prev => [...prev, imageUrl]);
     } catch (error) {
       console.error("エラーが発生しました:", error);
       alert("画像の生成に失敗しました");
@@ -92,22 +90,10 @@ export function TShirtDesigner() {
           </button>
         </div>
 
-        {/* 右側: Tシャツプレビュー */}
+        {/* 右側: プレビューを画像一覧表示に変更 */}
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
-            <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
-            {imageUrl && (
-              <div className="flex justify-center">
-                <Image
-                  src={imageUrl}
-                  alt="Generated"
-                  width={300}
-                  height={300}
-                  style={{ maxWidth: "300px", height: "auto" }}
-                  unoptimized
-                />
-              </div>
-            )}
+            <h2 className="text-xl font-semibold mb-6">Generated Designs</h2>
             <DesignPreview generatedImage={generatedImageUrls} />
           </div>
         </div>

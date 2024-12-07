@@ -40,18 +40,20 @@ export function DesignPreview({ generatedImage }: DesignPreviewProps) {
 
       {/* モーダルウィンドウ */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-lg p-4">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-              onClick={closeModal}
-            ></button>
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={closeModal}
+        >
+          <div 
+            className="relative bg-white rounded-lg shadow-lg p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Image
               src={selectedImage}
               alt="Selected T-shirt design"
-              width={800}
-              height={1067}
-              className="w-full h-auto rounded-lg"
+              width={400}
+              height={533}
+              className="w-full h-auto rounded-lg max-w-2xl"
             />
           </div>
         </div>
