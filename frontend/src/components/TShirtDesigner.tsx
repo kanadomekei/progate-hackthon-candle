@@ -96,23 +96,19 @@ export function TShirtDesigner() {
         <div className="col-span-5">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
-            <div className="flex justify-center">
-              {imageUrl && (
-                <div className="mt-4 flex justify-center">
-                  <Image
-                    src={imageUrl}
-                    alt="Generated"
-                    width={300}
-                    height={300}
-                    style={{ maxWidth: "300px", height: "auto" }}
-                    unoptimized
-                  />
-                </div>
-              )}
-              <div className="w-full max-w-md">
-                <DesignPreview generatedImage={generatedImageUrls} />
+            {imageUrl && (
+              <div className="flex justify-center">
+                <Image
+                  src={imageUrl}
+                  alt="Generated"
+                  width={300}
+                  height={300}
+                  style={{ maxWidth: "300px", height: "auto" }}
+                  unoptimized
+                />
               </div>
-            </div>
+            )}
+            <DesignPreview generatedImage={generatedImageUrls} />
           </div>
         </div>
       </div>

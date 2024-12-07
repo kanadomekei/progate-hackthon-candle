@@ -18,25 +18,25 @@ export function DesignPreview({ generatedImage }: DesignPreviewProps) {
     setSelectedImage(null);
   };
 
+  if (!generatedImage || generatedImage.length === 0) {
+    return null;
+  }
+
   return (
     <div className="bg-gray-50 rounded-lg p-4">
-      {generatedImage && generatedImage.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {generatedImage.map((url, index) => (
-            <Image
-              key={index}
-              src={url}
-              alt={`Generated T-shirt design ${index + 1}`}
-              width={200}
-              height={200}
-              className="w-full h-auto rounded-lg cursor-pointer"
-              onClick={() => handleImageClick(url)}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">まだ画像が生成されていません</p>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {generatedImage.map((url, index) => (
+          <Image
+            key={index}
+            src={url}
+            alt={`Generated T-shirt design ${index + 1}`}
+            width={200}
+            height={200}
+            className="w-full h-auto rounded-lg cursor-pointer"
+            onClick={() => handleImageClick(url)}
+          />
+        ))}
+      </div>
 
       {/* モーダルウィンドウ */}
       {selectedImage && (
