@@ -69,7 +69,11 @@ export function DesignPreview({
               </button>
               <button
                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-                onClick={() => router.push(`/edit?image=${encodeURIComponent(selectedImage)}`)}
+                onClick={() =>
+                  router.push(
+                    `/edit?image=${encodeURIComponent(selectedImage)}`,
+                  )
+                }
               >
                 画像を修正する
               </button>
