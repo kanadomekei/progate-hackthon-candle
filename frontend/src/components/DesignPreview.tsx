@@ -60,12 +60,18 @@ export function DesignPreview({
               height={533}
               className="w-full h-auto rounded-lg max-w-2xl"
             />
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex justify-center space-x-4">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                 onClick={handleCropClick}
               >
                 服の型に切り取る
+              </button>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
+                onClick={() => router.push(`/edit?image=${encodeURIComponent(selectedImage)}`)}
+              >
+                画像を修正する
               </button>
             </div>
           </div>
