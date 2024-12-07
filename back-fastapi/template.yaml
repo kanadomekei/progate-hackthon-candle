@@ -73,6 +73,67 @@ Resources:
         ViewerCertificate: 
           CloudFrontDefaultCertificate: true
 
+  LogFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+
+  LogFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Sub "${AWS::StackName}-logs-to-s3"
+      S3DestinationConfiguration:
+        BucketARN: !GetAtt LogBucket.Arn
+        RoleARN: !GetAtt LogFirehoseRole.Arn
+        BufferingHints:
+          IntervalInSeconds: 300
+          SizeInMBs: 5
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-logs"
+      LifecycleConfiguration:
+        Rules:
+          - Id: AutoDelete
+            Status: Enabled
+            ExpirationInDays: 90  # 保存期間を設定
+
+  LogsToFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: logs.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LogsToFirehosePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - firehose:PutRecord
+                  - firehose:PutRecordBatch
+                Resource: !GetAtt LogFirehose.Arn
+
+  LogSubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      LogGroupName: !Ref FastAPIFunctionLogGroup
+      FilterPattern: ""
+      DestinationArn: !GetAtt LogFirehose.Arn
+      RoleArn: !GetAtt LogsToFirehoseRole.Arn
+
 Outputs:
   FastAPIURL:
     Description: "API Gateway endpoint URL for Prod stage for FastAPI function"
