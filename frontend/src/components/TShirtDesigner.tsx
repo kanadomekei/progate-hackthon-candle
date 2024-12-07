@@ -12,7 +12,7 @@ export type ThemeColor = {
 };
 
 // モデルタイプの型定義を追加
-type ModelType = 'nova' | 'stable-diffusion';
+type ModelType = "nova" | "stable-diffusion";
 
 export function TShirtDesigner() {
   const [selectedThemeColor, setSelectedThemeColor] =
@@ -20,7 +20,8 @@ export function TShirtDesigner() {
   const [prompt, setPrompt] = useState("");
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<ModelType>('stable-diffusion');
+  const [selectedModel, setSelectedModel] =
+    useState<ModelType>("stable-diffusion");
 
   const [isLoading, setIsLoading] = useState(false);
   const baseURL =
@@ -31,9 +32,10 @@ export function TShirtDesigner() {
     setIsLoading(true);
     try {
       // エンドポイントをモデルに基づいて決定
-      const endpoint = selectedModel === 'nova' 
-        ? `https://w35iey431a.execute-api.us-west-2.amazonaws.com/generate-image-nova-canvas`
-        : `${baseURL}/generate-image-stable-diffusion`;
+      const endpoint =
+        selectedModel === "nova"
+          ? `https://w35iey431a.execute-api.us-west-2.amazonaws.com/generate-image-nova-canvas`
+          : `${baseURL}/generate-image-stable-diffusion`;
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -79,8 +81,10 @@ export function TShirtDesigner() {
                 <input
                   type="radio"
                   value="stable-diffusion"
-                  checked={selectedModel === 'stable-diffusion'}
-                  onChange={(e) => setSelectedModel(e.target.value as ModelType)}
+                  checked={selectedModel === "stable-diffusion"}
+                  onChange={(e) =>
+                    setSelectedModel(e.target.value as ModelType)
+                  }
                   className="mr-2"
                 />
                 Stable Diffusion
@@ -89,8 +93,10 @@ export function TShirtDesigner() {
                 <input
                   type="radio"
                   value="nova"
-                  checked={selectedModel === 'nova'}
-                  onChange={(e) => setSelectedModel(e.target.value as ModelType)}
+                  checked={selectedModel === "nova"}
+                  onChange={(e) =>
+                    setSelectedModel(e.target.value as ModelType)
+                  }
                   className="mr-2"
                 />
                 Nova

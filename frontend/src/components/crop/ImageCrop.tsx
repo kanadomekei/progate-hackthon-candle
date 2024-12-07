@@ -86,7 +86,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   useEffect(() => {
     loadImage();
     loadContours(selectedSize);
-    
+
     const animationFrame = requestAnimationFrame(function animate() {
       drawCanvas();
       requestAnimationFrame(animate);
