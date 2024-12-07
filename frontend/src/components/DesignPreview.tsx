@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface DesignPreviewProps {
   generatedImage: string[];
@@ -13,6 +14,8 @@ export function DesignPreview({
   selectedImage,
   onImageSelect,
 }: DesignPreviewProps) {
+  const router = useRouter();
+
   if (!generatedImage || generatedImage.length === 0) {
     return null;
   }
@@ -50,6 +53,17 @@ export function DesignPreview({
               height={533}
               className="w-full h-auto rounded-lg max-w-2xl"
             />
+            <div className="mt-4 flex justify-center">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push('/crop');
+                }}
+              >
+                服の型に切り取る
+              </button>
+            </div>
           </div>
         </div>
       )}
