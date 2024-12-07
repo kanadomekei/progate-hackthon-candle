@@ -20,20 +20,25 @@ export function TShirtDesigner() {
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://w35iey431a.execute-api.us-west-2.amazonaws.com';
+  const baseURL =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://w35iey431a.execute-api.us-west-2.amazonaws.com";
 
   const generateImage = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${baseURL}/generate-image-stable-diffusion`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${baseURL}/generate-image-stable-diffusion`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt,
+          }),
         },
-        body: JSON.stringify({
-          prompt: "A beautiful landscape with mountains",
-        }),
-      });
+      );
       if (!response.ok) {
         throw new Error("画像の生成に失敗しました");
       }
@@ -42,7 +47,7 @@ export function TShirtDesigner() {
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setImageUrl(imageUrl);
-      } catch (error) {
+    } catch (error) {
       console.error("エラーが発生しました:", error);
       alert("画像の生成に失敗しました");
     } finally {
@@ -68,7 +73,7 @@ export function TShirtDesigner() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow-lg p-6">
-            <ColorPalette />
+              <ColorPalette />
             </div>
             <div className="bg-white rounded-lg shadow-lg p-6">
               <StyleSelector
@@ -78,13 +83,13 @@ export function TShirtDesigner() {
             </div>
           </div>
           {/* デザイン生成ボタン */}
-            <button
-              onClick={generateImage}
-              disabled={isLoading}
-              className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-            >
-              {isLoading ? "生成中..." : "画像を生成"}
-            </button>
+          <button
+            onClick={generateImage}
+            disabled={isLoading}
+            className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
+          >
+            {isLoading ? "生成中..." : "画像を生成"}
+          </button>
         </div>
 
         {/* 右側: Tシャツプレビュー */}
@@ -92,18 +97,18 @@ export function TShirtDesigner() {
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold mb-6">Design Preview</h2>
             <div className="flex justify-center">
-            {imageUrl && (
-              <div className="mt-4 flex justify-center">
-                <Image 
-                  src={imageUrl} 
-                  alt="Generated" 
-                  width={300}
-                  height={300}
-                  style={{ maxWidth: '300px', height: 'auto' }}
-                  unoptimized
-                />
-              </div>
-            )}
+              {imageUrl && (
+                <div className="mt-4 flex justify-center">
+                  <Image
+                    src={imageUrl}
+                    alt="Generated"
+                    width={300}
+                    height={300}
+                    style={{ maxWidth: "300px", height: "auto" }}
+                    unoptimized
+                  />
+                </div>
+              )}
               <div className="w-full max-w-md">
                 <DesignPreview generatedImage={generatedImageUrls} />
               </div>
