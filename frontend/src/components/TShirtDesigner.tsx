@@ -30,9 +30,9 @@ export function TShirtDesigner() {
   const generateImage = async () => {
     setIsLoading(true);
     try {
-      // エンドポイントをモデルに基づいて決���
+      // エンドポイントをモデルに基づいて決定
       const endpoint = selectedModel === 'nova' 
-        ? `${baseURL}/generate-image-stable-diffusion`
+        ? `https://w35iey431a.execute-api.us-west-2.amazonaws.com/generate-image-nova-canvas`
         : `${baseURL}/generate-image-stable-diffusion`;
 
       const response = await fetch(endpoint, {
