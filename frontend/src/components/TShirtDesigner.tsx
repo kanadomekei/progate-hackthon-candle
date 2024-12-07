@@ -7,6 +7,7 @@ import { ColorPalette } from "./ColorPalette";
 import { StyleSelector } from "./DesignStyle";
 import { DesignPreview } from "./DesignPreview";
 import { NegativePromptSection } from "./NegativePronpt";
+import Image from "next/image";
 
 export type DesignStyle = string;
 export type ColorScheme = { selectedColor: string };
@@ -93,7 +94,14 @@ export function TShirtDesigner() {
             <div className="flex justify-center">
             {imageUrl && (
               <div className="mt-4 flex justify-center">
-                <img src={imageUrl} alt="Generated" className="max-w-[300px] h-auto" />
+                <Image 
+                  src={imageUrl} 
+                  alt="Generated" 
+                  width={300}
+                  height={300}
+                  style={{ maxWidth: '300px', height: 'auto' }}
+                  unoptimized
+                />
               </div>
             )}
               <div className="w-full max-w-md">
