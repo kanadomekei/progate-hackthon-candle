@@ -11,6 +11,7 @@ interface ImageEditorProps {
   onMouseUp: () => void;
   onWheel: (e: React.WheelEvent) => void;
   onCropImage: () => void;
+  backgroundColor: string;
 }
 
 export function ImageEditor({
@@ -22,6 +23,7 @@ export function ImageEditor({
   onMouseUp,
   onWheel,
   onCropImage,
+  backgroundColor,
 }: ImageEditorProps) {
   return (
     <div className="lg:col-span-9 space-y-6">
@@ -37,7 +39,7 @@ export function ImageEditor({
           onWheel={onWheel}
           className="w-full max-w-full cursor-move rounded-lg"
           style={{
-            backgroundColor: "#f8f9fa",
+            backgroundColor: backgroundColor,
             border: "2px solid #e2e8f0",
           }}
         />

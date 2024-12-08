@@ -5,15 +5,19 @@ import { ChangeEvent } from "react";
 interface ControlPanelProps {
   scale: number;
   rotation: number;
+  backgroundColor: string;
   onScaleChange: (value: number) => void;
   onRotationChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBackgroundColorChange: (color: string) => void;
 }
 
 export function ControlPanel({
   scale,
   rotation,
+  backgroundColor,
   onScaleChange,
   onRotationChange,
+  onBackgroundColorChange,
 }: ControlPanelProps) {
   return (
     <div className="lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
@@ -48,6 +52,22 @@ export function ControlPanel({
             value={rotation}
             onChange={onRotationChange}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          />
+        </div>
+
+        {/* 背景色コントロール */}
+        <div>
+          <label className="flex items-center justify-between text-sm font-medium text-gray-700 mb-2">
+            <span>背景色</span>
+            <span className="text-blue-600" style={{ color: backgroundColor }}>
+              {backgroundColor}
+            </span>
+          </label>
+          <input
+            type="color"
+            value={backgroundColor}
+            onChange={(e) => onBackgroundColorChange(e.target.value)}
+            className="w-full h-10 rounded cursor-pointer"
           />
         </div>
 

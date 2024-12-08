@@ -63,7 +63,12 @@ export function ImageModal({
             削除
           </button>
           <button
-            onClick={() => onDownload(selectedImage)}
+            onClick={() => {
+              onDownload(selectedImage);
+              alert(
+                "ダウンロードした画像でオリジナルTシャツを作ってみませんか？\npixivFACTORYで簡単にTシャツが作れます！\nhttps://factory.pixiv.net/products/all_over_printing_dry_tshirt",
+              );
+            }}
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
           >
             ダウンロード
