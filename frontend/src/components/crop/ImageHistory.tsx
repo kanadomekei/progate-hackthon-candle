@@ -38,14 +38,21 @@ export function ImageHistory({
                 onClick={() => onImageSelect(image)}
               />
               <div className="flex justify-between mt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onDownloadImage(image)}
-                  className="flex items-center gap-1"
-                >
-                  <Download className="w-4 h-4" />
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      onDownloadImage(image);
+                      alert(
+                        "ダウンロードした画像でオリジナルTシャツを作ってみませんか？\npixivFACTORYで簡単にTシャツが作れます！\nhttps://factory.pixiv.net/products/all_over_printing_dry_tshirt",
+                      );
+                    }}
+                    className="flex items-center gap-1"
+                  >
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
