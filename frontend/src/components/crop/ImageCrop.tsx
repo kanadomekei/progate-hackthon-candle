@@ -43,6 +43,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
   const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<CroppedImage | null>(null);
   const [selectedSize, setSelectedSize] = useState<TShirtSize>("M");
+  const [backgroundColor, setBackgroundColor] = useState<string>("#f8f9fa");
 
   // 座標データの読み込みを最適化
   const loadContours = async (size: TShirtSize) => {
@@ -162,7 +163,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
 
     const v = scale * 0.01;
 
-    ctx.fillStyle = "rgb(200, 200, 200)";
+    ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     try {
@@ -197,7 +198,14 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [scale, rotation, imagePos, tshirtCoordinates, imageLoaded]);
+  }, [
+    scale,
+    rotation,
+    imagePos,
+    tshirtCoordinates,
+    imageLoaded,
+    backgroundColor,
+  ]);
 
   // Crop image
   const cropImage = () => {
@@ -208,7 +216,9 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     const ctx = out.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, OUT_WIDTH, OUT_HEIGHT);
+    // 背景色で全体を塗りつぶす
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, OUT_WIDTH, OUT_HEIGHT);
 
     ctx.beginPath();
     if (tshirtCoordinates.length > 0) {
@@ -225,6 +235,10 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     }
     ctx.closePath();
     ctx.clip();
+
+    // 背景色を再度描画（クリッピングパスの内側のみ描画される）
+    ctx.fillStyle = backgroundColor;
+    ctx.fillRect(0, 0, OUT_WIDTH, OUT_HEIGHT);
 
     const v = scale * 0.01;
     drawRotatedImage(
@@ -320,7 +334,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
           </p>
         </header>
 
-        {/* サイズ選択ボタングループを追加 */}
+        {/* サイズ選択ボタングループを追�� */}
         <div className="flex gap-2">
           {(["S", "M", "L", "XL"] as const).map((size) => (
             <button
@@ -341,8 +355,10 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
           <ControlPanel
             scale={scale}
             rotation={rotation}
+            backgroundColor={backgroundColor}
             onScaleChange={setScale}
             onRotationChange={handleRotationChange}
+            onBackgroundColorChange={setBackgroundColor}
           />
 
           <ImageEditor
@@ -354,6 +370,7 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
             onMouseUp={handleMouseUp}
             onWheel={handleWheel}
             onCropImage={cropImage}
+            backgroundColor={backgroundColor}
           />
         </div>
 
