@@ -6,6 +6,7 @@ import { ImageEditor } from "./ImageEditor";
 import { ImageHistory } from "./ImageHistory";
 import { ImageModal } from "./ImageModal";
 import { CroppedImage } from "./types";
+import { useRouter } from "next/navigation";
 
 // Constants
 const CANVAS_WIDTH = 600;
@@ -21,6 +22,7 @@ interface ImageCropProps {
 type TShirtSize = "S" | "M" | "L" | "XL";
 
 export const ImageCrop = ({ imagePath }: ImageCropProps) => {
+  const router = useRouter();
   const cvsRef = useRef<HTMLCanvasElement>(null);
   const outRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -324,17 +326,31 @@ export const ImageCrop = ({ imagePath }: ImageCropProps) => {
     setSelectedImage(null);
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
-        <header>
-          <h1 className="text-2xl font-bold text-gray-800">画像編集ツール</h1>
-          <p className="text-gray-600">
-            画像をドラッグし位置を調整し、スケールと回転を設定してください
-          </p>
+        <header className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">画像編集ツール</h1>
+            <p className="text-gray-600">
+              画像をドラッグし位置を調整し、スケールと回転を設定してください
+            </p>
+          </div>
+          <div>
+            <button
+              onClick={handleBack}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700"
+            >
+              画像生成に戻る
+            </button>
+          </div>
         </header>
 
-        {/* サイズ選択ボタングループを追�� */}
+        {/* サイズ選択ボタングループを追加 */}
         <div className="flex gap-2">
           {(["S", "M", "L", "XL"] as const).map((size) => (
             <button
